@@ -1,0 +1,130 @@
+\documentclass[12pt, oneside, a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[colorlinks,bookmarksopen]{hyperref} % Para los enlaces web - necesita kvoptions.sty que está dentro de los texlive-latex.recommended
+\usepackage{graphicx}
+\usepackage{paralist} % Para las listas dentro de los párrafos tipo (i) esto (ii) lo otro
+\usepackage{amsmath} %Soporte para matrices
+
+\title{Metapesca: Productividad de las áreas en equilibrio}
+\author{Versión 26.1.6}
+
+\begin{document}
+ \maketitle
+
+En una metapoblación en la cúal las poblaciones están conectadas mediante dispersión larvaria algunas de las poblaciones que la componen se pueden ver limitada por el aporte de individuos que llegan a las mismas, no pudiendo alcanzar su capacidad de carga. 
+
+En capacidad de carga (k), cúal es el mínimo valor de producción por unidad de biomasa ($prodxB$) que mantiene TODAS las áreas en kcarga(areas). Tenemos que:
+
+\begin{equation}\label{Settlers}
+   \begin{bmatrix} Settlers\end{bmatrix} =  prodxB \begin{bmatrix} C \end{bmatrix} \times \begin{bmatrix} SB \end{bmatrix}
+\end{equation}
+
+o lo que es lo mismo, 
+
+\begin{equation}\label{Settlers Modificada}
+   \frac{1}{prodxB} \begin{bmatrix} Settlers\end{bmatrix} =  \begin{bmatrix} C \end{bmatrix} \times \begin{bmatrix} SB \end{bmatrix}
+\end{equation}
+
+donde $\begin{bmatrix} Settlers\end{bmatrix}$ es la matriz que contiene el número de reclutas, $\begin{bmatrix} C \end{bmatrix}$ es la matriz de conectividad (ambas con dimensiones $Nareas \times Nareas$), y $\begin{bmatrix} SB \end{bmatrix}$ es la biomasa desovante (\emph{spawning biomass}) y tiene dimensiones $Nareas$. 
+
+Por otro lado, para que todas las áreas se mantengan productivas, se tiene que dar que:
+
+\begin{equation}\label{Produccion por recluta}
+   \begin{bmatrix} \ddots& & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix} \times \begin{bmatrix} Settlers\end{bmatrix} \geq \begin{bmatrix} SB \end{bmatrix}
+\end {equation}
+
+donde $\begin{bmatrix} \ddots& & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix}$ es una matriz diagonal con la producción por recluta de cada área y tiene dimensión $Nareas \times Nareas$. 
+
+Reemplazando la ecuación \ref{Settlers} en la \ref{Produccion por recluta}:
+
+\begin{equation}\label{Produccion A}
+   \begin{bmatrix} \ddots& & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix} \times \begin{bmatrix} C \end{bmatrix} \times \begin{bmatrix} SB \end{bmatrix} \times prodxB \geq \begin{bmatrix} SB \end{bmatrix}
+\end {equation}
+
+donde al multiplicar ambos lados por la inversa de $\begin{bmatrix} \ddots& & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix}$ queda
+
+\begin{equation}\label{Produccion B}
+    prodxB \times \begin{bmatrix} C \end{bmatrix} \times \begin{bmatrix} SB \end{bmatrix} \geq \begin{bmatrix} R_{0} \end{bmatrix}
+\end {equation}
+
+siendo $\begin{bmatrix} R_{0} \end{bmatrix}$ el reclutamiento máximo en cada área.
+
+Y finalmente,
+
+\begin{equation}\label{Produccion C}
+    prodxB \times \begin{bmatrix} C \end{bmatrix} \times \begin{bmatrix} \ddots& & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix} \times \begin{bmatrix} R_{0} \end{bmatrix} \geq \begin{bmatrix} R_{0} \end{bmatrix}
+\end {equation}
+
+Si se va disminuyendo el valor de $prodxB$, llega un momento en el que un área al menos se equilibra (es decir, no le sobran settlers). En este momento la producción por recluta por el número de reclutas es igual a la biomasa desovante para esa área. 
+
+\begin{equation}
+   \frac{SB_{i}}{R} \dot Settlers_{i} = SB_{i}
+\end{equation}
+
+donde $i$ es una de las áreas. 
+
+En este caso: $ Settlers_{i}= R_{i}$
+
+El área que primero alcanza este punto se va a corresponder con el área con el mínimo ratio de $Settlers_{i}/R_{i}$, i.e: 
+
+$Area(i)$ en donde $min \Bigg ( \frac{\begin{bmatrix} C \end{bmatrix}\begin{bmatrix} SB \end{bmatrix}}{\begin{bmatrix} R \end{bmatrix}} \Bigg ) $
+
+Una vez identificada el área con menor ratio de $\frac{Settler_{i}}{R_{i}}$ ($a_{min}$) sabemos que: 
+
+\begin{equation}
+        1= Ratio(a_{min}) \dot prodxB_{0}
+\end{equation}
+
+donde $prodxB_{0}$ es la producción por unidad de biomasa mínima que mantiene a todas las poblaciones en capacidad de carga. 
+
+Así, 
+\begin{equation}
+        prodxB_{0} = \frac{1}{Ratio(a_{min})}
+\end{equation}
+			
+Sí definimos $\lambda prod B$ como la producción de la población respecto a las condiciones de producción mínimas para las que todas las poblaciones estarían en capacidad de carga. Si es uno es que están en el límite, si es menor que 1 es que hay alguna población que se ve limitada por el número de reclutas que le llegan a través de la población que se ve limitadapor el número de reclutas que le llegan a través de la dispersión y si es mayor que 1 es que hay larvas de sobra.
+
+Entonces, 
+
+\begin{equation}
+        \lambda prod B = \frac{prodxB}{prodxB_{0}}
+\end{equation}
+
+por lo que,
+
+\begin{equation}
+       prodxB = \lambda prod B \dot prodxB_{0} = \frac{\lambda prod B}{Ratio(a_{min})}
+\end{equation}
+
+\section{Relación con modelo de Stock-Reclutamiento simple}
+
+En un modelo con una sóla área:
+
+\begin{equation}
+SB_{R_{0}}= \frac{SB_{0}}{R_{0}}= \frac{1}{prodxB}
+\end{equation}
+
+En este modelo:
+
+\begin{equation}
+    \begin{bmatrix} C \end{bmatrix} \times \begin{bmatrix} \ddots& & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix} \times \begin{bmatrix} R_{0} \end{bmatrix} \geq \frac{1}{prodxB} \begin{bmatrix} R_{0} \end{bmatrix}
+\end{equation}
+
+OJO!!! $\begin{bmatrix} R_{0} \end{bmatrix}$ NO SE SIMPLIFICA
+
+Se pueden llevar a fracciones (pero no está implementado así).
+
+\begin{equation}
+    \begin{bmatrix} C \end{bmatrix} \times \begin{bmatrix} \ddots& & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix} \times \begin{bmatrix} \frac{R_{0i}}{\sum R_{0}} \end{bmatrix} \geq \frac{1}{prodxB} \begin{bmatrix} \frac{R_{i}}{\sum R_{0}} \end{bmatrix}
+\end{equation}
+
+NOTA: Si todas las áreas tienen el mismo $R_{0}$ entonces se simplifica ya que puedes sacar $R_{0}$ como escalar, multiplicar $\begin{bmatrix} \ddots& & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix}$ por un vector de 1s y te quedaría como:
+
+\begin{equation}
+    R_{0} \begin{bmatrix} C \end{bmatrix} \times \begin{bmatrix} \ddots & & 0 \\ & SR/R & \\ 0 & & \ddots\end{bmatrix} \geq \frac{1}{prodxB} \begin{bmatrix} \frac{R_{i}}{\sum R_{0}} \end{bmatrix}
+\end{equation}
+
+
+\end{document}
+

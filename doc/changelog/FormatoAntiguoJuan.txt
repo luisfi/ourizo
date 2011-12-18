@@ -1,0 +1,52 @@
+    'Start formating the "Input" worksheet
+    Dim Nareas As Integer
+    Nareas = Worksheets("Input").Columns(2).Rows(31)
+    
+
+    Columns("A:A").ColumnWidth = 54.29
+        
+    'Format cells with red font
+    Range("A1:A3,A12,A14,A41,A52,A55,A67,A74,A81,A87,A94,A101,A107,A109,A115").Select
+        Selection.Font.ColorIndex = 3
+        Selection.Font.Bold = True
+    
+    'Format group titles grey background and white fonts
+    Range("A5,A18,A30,A46,A80,A123").Select
+        Selection.Font.ColorIndex = 2
+         Selection.Font.Size = 12
+         Selection.Font.Bold = True
+        
+        With Selection.Interior
+            .ColorIndex = 48
+            .Pattern = xlSolid
+            .PatternColorIndex = xlAutomatic
+        End With
+        
+ ActiveSheet.Cells(123 + Nareas + 3, 1).Select
+        
+        Selection.Font.ColorIndex = 2
+         Selection.Font.Size = 12
+         Selection.Font.Bold = True
+        
+        With Selection.Interior
+            .ColorIndex = 48
+            .Pattern = xlSolid
+            .PatternColorIndex = xlAutomatic
+        End With
+        
+ ActiveSheet.Cells(123 + Nareas + 3 + Nyears + 3, 1).Select
+        
+        Selection.Font.ColorIndex = 2
+         Selection.Font.Size = 12
+         Selection.Font.Bold = True
+        
+        With Selection.Interior
+            .ColorIndex = 48
+            .Pattern = xlSolid
+            .PatternColorIndex = xlAutomatic
+        End With
+          
+         
+        
+  Unload Me
+  End

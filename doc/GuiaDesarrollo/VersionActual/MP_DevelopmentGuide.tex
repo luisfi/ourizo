@@ -1,0 +1,28 @@
+\documentclass[12pt, oneside, a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[colorlinks,bookmarksopen]{hyperref} % Para los enlaces web - necesita kvoptions.sty que está dentro de los texlive-latex.recommended
+\usepackage{graphicx}
+\usepackage{paralist} % Para las listas dentro de los párrafos tipo (i) esto (ii) lo otro
+\title{Metapesca: Guía de Desarrollo}
+\author{Versión 26.1.6}
+
+
+
+\begin{document}
+\maketitle
+
+\include{Basics} % Estructura básica del modelo. Explicación general
+\include{Definiciones} % Definiciones básicas
+\include{PasoaPaso}  % Simulación paso a paso. Flujo del programa y explicación de las funciones según aparecen 
+\include{Variables} % Lista de variables globales del programa y definiciones. 
+
+
+	\section{Novedades y cambios respecto a la versión anterior}
+	
+	\begin{itemize}
+		\item Implementación de la distribución del esfuerzo mediante algoritmo de Walters y Martell (2003)
+	\end{itemize}
+
+			
+\end{document}

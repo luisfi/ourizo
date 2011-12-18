@@ -1,0 +1,184 @@
+Nombre scenario	Erizo6		
+Especie	Erizo		
+Region	Chile		
+			
+Run Options			
+Conditioning (1) or Simulation (2) Flag	2		
+N replicates	1		
+Type of Graphs / Variable to plot / Scale	1	3	1
+Output Weight and Size?	FALSE		
+Output_Nage_Nsize?	FALSE		
+			
+"Observation Error (1: Determinist, 2: Stochastic)"			
+Survey	1		
+"Process Error (1: Determinist, 2: Stochastic)"			
+Recruitment	1		
+Initial Conditions	1		
+		
+Conditioning Data		
+Recruitment? / q_RecIndex	FALSE	1
+"Biomas? / (1: Absolute, 2: Relative)"	FALSE	1
+"Abundance? / (1: Absolute, 2: Relative)"	FALSE	1
+Input Catch?	FALSE	
+		
+		
+		
+		
+		
+		
+		
+Dimensioning Parameters		
+Number of Areas	6	
+First Year	2006	
+Last Year	2026					
+Number of steps intrayear (Nt)	1					
+Start Age	1					
+Age Plus Group	12					
+First Size L1	8					
+Size Increment Linc	3					
+Number of size clases	46					
+						
+Area attributes						
+Area index	1	2	3	4	5	6
+Surface habitat (m2)	3037052.78	1370093.135	288549.7228	2443431.182	1060983.958	1886193.703
+Latitude	29.12	29.49	30.01	30.86	31.88	31.88
+Longitude	71.49	71.32	71.37	71.66	71.53	71.53
+Population Dynamics						
+Recruitment (1: constant; 2: denso-dep)	1					
+Recruitment CV	0.6					
+Recruitment Temporal Correlation	0					
+Spatial? Leer una matriz?						
+Type of Growth (1: density-ind; 2:denso-dep)	1					
+Method to calculate size composition of plus group (1: age-based; 2: size-based) 	2					
+						
+Global Parameters						
+Age of 100% Mature	4					
+Lambda_ProdXBiomasa	1.5					
+Handling time for cpue	0					
+Price per unit of biomass 	1					
+						
+Parameters by Biological region						
+Number of Biological Regions	6					
+Area index	1	2	3	4	5	6
+Biological Region	1	2	3	4	5	6
+Asymptotic Length (Bertalanfy)	9207.213318	9207.213318	9207.213318	9207.213318	9207.213318	9207.213318
+"Growth rate, K (Bertalanfy)"	0.001001	0.001001	0.001001	0.001001	0.001001	0.001001
+t0	-0.731885124	-0.731885124	-0.731885124	-0.731885124	-0.731885124	-0.731885124
+cvmu	0.1	0.1	0.1	0.1	0.1	0.1
+Multiplier L-W Relationship	1.09E-06	1.09E-06	1.09E-06	9.61E-07	1.18E-06	1.18E-06
+Exponent L-W Relationtship	2.7498	2.7498	2.7498	2.7785	2.7306	2.7306
+Natural Mortality Rate	0.4	0.4	0.4	0.4	0.4	0.4
+						
+Parameters by Area						
+Population Carrying Capacity (K) kg/ m2	2	2	2	2	2	2
+MaxRec numero/m2	5	5	5	5	5	5
+Catchability coefficient	0.1	0.1	0.1	0.1	0.1	0.1
+Cost per unit of effort	0	0	0	0	0	0
+Frac. reduccion de crecimiento en Kcarga (gk)	0.99	0.99	0.99	0.99	0.99	0.99
+Biomasa inicio densdep % K	0.4	0.4	0.4	0.4	0.4	0.4
+						
+Initial Conditions						
+"Start at: (1) Kcarga (2) Virgin, (3) HR, (4) Input File"	1					
+Initial Harvest Rate	0	0	0	0	0	0
+Initial conditions CV	0					
+Leer conectividad aparte- abajo						
+						
+Management						
+Management Controls						
+Number of Management Regions	1					
+Area Index	1	2	3	4	5	6
+Management Region	1	1	1	1	1	1
+Closed areas (permanent reserves)	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE
+Size Limit (knife-edge selectivity)	56.85	56.85	56.85	56.85	56.85	56.85
+"Management Strategy (1- rotation, 2- by Area, 3- by region)"	1					
+TAC-Effort-or-HR?	3					
+Maximum possible effort	0					
+Is there a feedback control rule?	FALSE					
+Target Harvest Rate	0					
+Season Length (Number of time units)	1					
+t Start Season	1					
+If rotation						
+Survey only candidate areas instead of all areas on feedback? 	FALSE					
+Target Harvest Rate for pulse fishing	0.9					
+Check condition to reopen?	FALSE					
+"    IF TRUE, Fraction of Preharvest Biomass to Reopen"	0.9					
+Use Resting time (or other ranking criteria) to set Rotation Order?	TRUE					
+"    IF TRUE, Resting Time (or other criteria)"	1	2	3	4	5	6
+If by Region:						
+"Fishing Effort Distribution (1- IFD, 2- IFD-Walters & Martel, 3-Gravitational. NOT READY YET)"	1					
+"    IF IFD, Sensitivity parameter of fishing behaviour"	0.01					
+"    IF IFD, Ndays_beforeswitch (min number of days before switching areas)"	7					
+						
+						
+If Feedback (Closed-Loop)	
+Number of Surveys used in MP rule (Implemented 1)	1
+Survey 1	
+Survey Unit (1 Numbers or 2 Biomass) one value per survey	2
+Survey q	1
+Survey CV	0
+"Survey Population (1 Vulnerable, 2 Mature, 3 Total, 4 Specified Selectivity)"	1
+"   IF Specified Selectivity, Input age selectivity vector"	
+Survey 2	
+Survey Unit (1 Numbers or 2 Biomass) one value per survey	2
+Survey q	1
+Survey CV	0
+"Survey Population (1 Vulnerable, 2 Mature, 3 Total, 4 Specified Selectivity)"	1
+"   IF Specified Selectivity, Input age selectivity vector"	
+	
+	
+Larval Connectivity by area	Area where larvae were produced						
+Area where larvae settled	1	2	3	4	5	6	
+1	1	0	0	0	0	0	
+2	0	1	0	0	0	0	
+3	0	0	1	0	0	0	
+4	0	0	0	1	0	0	
+5	0	0	0	0	1	0	
+6	0	0	0	0	0	1	
+
+Catch	Area						
+Year	TAC	TAC_region(1)	TAC_region(2)	TAC_region(3)	TAC_region(4)	TAC_region(5)	TAC_region(6)
+2006	100	0	0	0	0	0	0
+2007	100	0	0	0	0	0	0
+2008	100	0	0	0	0	0	0
+2009	100	0	0	0	0	0	0
+2010	100	0	0	0	0	0	0
+2011	100	0	0	0	0	0	0
+2012	100	0	0	0	0	0	0
+2013	100	0	0	0	0	0	0
+2014	100	0	0	0	0	0	0
+2015	100	0	0	0	0	0	0
+2016	100	0	0	0	0	0	0
+2017	100	0	0	0	0	0	0
+2018	100	0	0	0	0	0	0
+2019	100	0	0	0	0	0	0
+2020	100	0	0	0	0	0	0
+2021	100	0	0	0	0	0	0
+2022	100	0	0	0	0	0	0
+2023	100	0	0	0	0	0	0
+2024	100	0	0	0	0	0	0
+2025	100	0	0	0	0	0	0
+2026	100	0	0	0	0	0	0
+
+Effort	Area						
+Year	TAE	TAE_region(1)	TAE_region(2)	TAE_region(3)	TAE_region(4)	TAE_region(5)	TAE_region(6)
+2006	0	0	0	0	0	0	0
+2007	0	0	0	0	0	0	0
+2008	0	0	0	0	0	0	0
+2009	0	0	0	0	0	0	0
+2010	0	0	0	0	0	0	0
+2011	0	0	0	0	0	0	0
+2012	0	0	0	0	0	0	0
+2013	0	0	0	0	0	0	0
+2014	0	0	0	0	0	0	0
+2015	0	0	0	0	0	0	0
+2016	0	0	0	0	0	0	0
+2017	0	0	0	0	0	0	0
+2018	0	0	0	0	0	0	0
+2019	0	0	0	0	0	0	0
+2020	0	0	0	0	0	0	0
+2021	0	0	0	0	0	0	0
+2022	0	0	0	0	0	0	0
+2023	0	0	0	0	0	0	0
+2024	0	0	0	0	0	0	0
+2025	0	0	0	0	0	0	0
+2026	0	0	0	0	0	0	0

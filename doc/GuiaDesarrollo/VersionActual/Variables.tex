@@ -1,0 +1,191 @@
+	\section{Variables del Programa}
+		\begin{description}
+		% NOTA: Para utilizar corchetes dentro de \item[] (como en el caso de vectores) rodearlas de corchetes: {[} %
+		% -- A -- %
+		
+		\item[Abundancetype] 1. Absoluta 2. Relativa CONTROL
+		\item[AgeFullMature] Clase de edad a la que maduran los individuos (knife-edge). CONTROL
+		\item[AgePlus] Grupo de edad que incluye a todos los individuos mayores que esa.
+		\item[Alpha{[}Nareas{]}] $(1-e^{-k}) L_{inf} gk$ Primer término de la ecuación de crecimiento individual.
+		\item[Alpha0{[}Narea{]}] Alpha
+		\item[Amax{[}Nareas{]}] Edad máxima. (Inicializada en 1000. Comentado: -Log(0.0001)/M[Area]).
+		\item[Atlas{[}Nareas{]}] Biomasa vulnerable estimada de todas las áreas. Utilizada en el caso de surveys parciales. No se estiman las abundancias de todas las áreas al mismo tiempo. 
+		\item[aW{[}Nareas{]}] Multiplicador de la relación Talla-Peso (L-W).
+		
+		% -- B -- %
+		\item[Beta{[}Nareas{]}] $1-(1-Rho) gk$ Segundo término de la ecuación de crecimiento individual.
+		\item[Beta0{[}Narea{]}] Beta
+		\item[Bg0{[}Nareas{]}] $\frac{k-B_{th}}{1-g_k}+B_{th}$
+		\item[Bmature{[}Nareas, Nyears{]}] 
+		\item[Bregion{[}Nareas{]}] Grupos de áreas que comparten los parámetros de crecimiento y mortalidad natural. Vector con el ID de la región biológica a la que pertenece cada área. 
+		\item[BthThreshold{[}Nareas{]}] Biomasa de inicio de la denso-dependencia en \% de capacidad de carga.
+		\item[Bmature{[}Nyears, Nareas{]}] Biomasa en estadío reproductivo maduro.
+		\item[Btotal{[}Nyears, Nareas{]}] Biomasa total por área.
+		\item[BtotTmp{[}Nareas{]}] Biomasa total por área. (Variable auxiliar utilizada en cálculos intra-season).
+		\item[Bvulnerable{[}Nyears, Nareas{]}] Biomasa vulnerable por área. 
+		\item[BvulTmp{[}Nareas{]}] Biomasa vulnerable por área. (Variable auxiliar utilizada en cálculos intra-season).
+		\item[BR0] Biomasa en condiciones vírgenes por recluta(Se utiliza para el cálculo de la R0 en el reclutamiento). 
+		\item[Bvultype] 1. Absoluta 2. Relativa CONTROL
+		\item[bW{[}Nareas{]}] Exponente de la relación Talla-Peso (L-W).
+
+		
+		% -- C -- %
+		\item[Candidate\_areas{[}Nregions, MaxNareas\_Region{]}] Matriz que contiene las áreas abiertas a la pesca para cada región (ordenadas, si procede, en función del tiempo de descanso que han tenido). Estas áreas se escriben en la hoja \emph{Calcs}.
+		\item[Catch{[}Nareas, Nyears{]}]
+		\item[ClosedArea{[}Styear, Nareas{]}] Variable booleana. ¿Área cerrada? Read\_Input sólo inicializa los valores para el primer año,\emph{iniciateVariables()} inicializa los valores para todos los años de las áreas cerradas permanentemente.
+		\item[ClosedRegion{[}Nregions{]}] Variable booleana. ¿Región cerrada? Se actualiza anualmente.
+		\item[ClosedRegionTmp{[}Nregions{]}] Variable booleana. ¿Región cerrada? Se actualiza en cada periodo de pesca intra-anual.		
+		\item[Connect{[}Nareas, Nareas{]}] Matriz de conectividad larvaria.
+		\item[CVmu{[}Nareas{]}] Coeficiente de variación de la talla media para cada clase de edad.
+		
+		% -- E -- %
+		\item[EffortDistributionFlag] Distribución del esfuerzo. 1.Ideal Free Distribution 2. Gravitacional (Comentada en el código). CONTROL
+		
+		% -- F -- %
+		\item[Feedback] Variable booleana ¿Hay una feedback control rule? CONTROL
+		\item[Flag\_Rec\_Fish{[}Nareas,Nages{]}] Toma valor 1 en Preliminary\_Calcs. Se utiliza en popdyn(). 1 (por defecto) indica que la edad no ha sido reclutada. 2 que ha sido parcialmente reclutada y 3 que está totalmente reclutada.
+		\item[frac{[}Nareas, Nages, NpulsosMax{]}] Toma valor 1 en Preliminary\_Calcs. Indica la fración de la población que es extraída en cada pulso de pesca.
+		\item[FracMat{[}Nage{]}] Matriz con 1s y 0s para indicar qué edades son maduras y cuales no. 
+		\item[FracSel{[}Nareas, Nages{]}] Proporción de la población que puede ser extraída por pesca para cada edad. 
+		   
+		% -- G -- %
+		\item[g{[}Nareas{]}] Fracción de reducción de crecimiento cuando hay efectos densodependientes. Con este valor se calculan las Alphas y Betas para hallar la talla.
+		\item[gk{[}Nareas{]}] Fracción de reducción de crecimiento en capacidad de carga (Si es denso-independiente es 1).
+		\item[Growth\_type] Tipo de crecimento: 1. Denso-independiente; 2. Densodependiente. CONTROL
+		
+		% -- H -- %
+		\item[HR\_start{[}Nareas{]}] Tasa de explotación inicial.
+		\item[HRTmp{[}Nareas{]}] Tasa de explotación instantánea.
+		\item[Hstrategy] Estrategia de explotación. 1. Rotacional; 2. Por área; 3. Por región. CONTROL
+		
+		% -- I -- %
+		\item[IDopenarea{[}{]}] Vector que indica el índice de las áreas que están abiertas. Si hay que tener en cuenta el periodo de descanso (RestingTimeFlag) las ordena por periodo de descanso decreciente. (Variable Local - M7\_Fishing).
+		\item[iLfull{[}Nareas{]}] Edad a la que los individuos se vuelven vulnerables a la pesca. 
+		\item[Initial\_Conditions] 1. Inicio a capacidad de carga K; 2. Inicio bajo condiciones de explotación con una tasa determinada; 3. Leer condiciones de inicio desde archivo. CONTROL
+		\item[InitialCV]
+		\item[InputAbundance] Variable booleana. ¿Cargar información de abundancia desde archivo (Hoja de Metapesca)? CONTROL
+		\item[InputBvul] Variable booleana. ¿Cargar información de biomasa vulnerable desde archivo (Hoja de Metapesca)? CONTROL
+		\item[InputCatch] Variable booleana. ¿Cargar información de capturas desde archivo (Hoja de Metapesca)? CONTROL
+		\item[InputRec] Variable booleana. ¿Cargar información de reclutamiento desde archivo (Hoja de Metapesca)? CONTROL
+		
+		% -- K -- %
+		\item[k{[}Nareas{]}] Tasa de crecimiento individual (von Bertalanffy)
+		\item[kcarga{[}Nareas{]}] Capacidad de carga. Aunque en el Input se introduce por $m^2$ al inicializar las variables se recalcula la total por área.
+		
+		
+		% -- L -- %
+		\item[l{[}Nilens{]}] Talla media para cada intervalo. Intervalos de talla definidos desde l(ilen)-Linc/2 hasta l(ilen)+Linc/2. 
+		\item[L1] Tamaño inicial correspondiente a la edad inicial.
+		\item[$\lambda$\_ProdxBiomasa] Productividad de la población. CONTROL
+		\item[Lat{[}Nareas{]}] Latitud en grados decimales a la que se encuentra el área (Sólo para gráficos) ¿Cómo se define? ¿Punto medio del área? 
+		\item[Lfull{[}Nareas{]}] Talla mínima de pesca (knife-edge).
+		\item[Linc] Incremento de tamaño entre clases de tamaño. 
+		\item[Linf{[}Nareas{]}] Tamaño máximo que pueden alcanzar los individuos (von Bertalanffy)
+		\item[Long{[}Nareas{]}] Longitud en grados decimales a la que se encuentra el área.
+		
+		% -- M -- %
+		\item[M{[}Nareas{]}] Mortalidad natural
+		\item[MaxEffort] Esfuerzo máximo posible global. 
+		\item[MaxNareas\_Region] Máximo del número de áreas abiertas a la pesca por región. 
+		\item[mu{[}Nyears, Nareas, Nages{]}] Tamaño medio esperado para cada clase de edad. El tamaño inicial se corresponde con el esperado para el modelo de von Bertalanffy ($L_{inf}(1-e^{-k (t-t_0)})$)
+		\item[muTmp{[}Nareas, Nages{]}] mu. Tamaño medio esperado para cada clase de edad.
+		   
+		
+		% -- N -- %
+		\item[N{[}Nyears, Nareas, Nages{]}] Número de individuos. (Nota: Al inicializar el vector en \emph{Virgin\_Conditions()} es por recluta pero por el medio pasa a ser número de individuos).
+		\item[Nages] AgePlus - Stage + 1
+		\item[Nareas] Número de áreas.
+		\item[Nareas\_region{[}Nregions{]}] Áreas abiertas a la pesca de cada región. 
+		\item[NBregions] Número de regiones biológicas.
+		\item[Ndias\_before\_switch] Mínimo de días que tienen que pasar desde que se comienza a explotar un áreas hasta que puede cambiar de área.
+		\item[Nfracs{[}Nages{]}] Número de fracciones (o truncaciones) que tiene la distribución de tallas por edad al verse sometida parcialmente a la pesca. Se inicializa en cero (quiere decir que la distribución no está truncada), y en PopDyn() va cambiando.
+		\item[Nilens] Número de clases de talla (No es igual al número de clases de edad).
+		\item[Nopenareas] Número de áreas abiertas a la pesca. 
+		\item[NPulses] Pulsos de pesca (Es el número máximo de cambios que puede haber en un año). $365/(N_t*Ndias_{beforeswitch})$.
+		\item[NpulsosMax] Nt*Nages Número de pulsos de pesca a los que se puede ver sometida una cohorte.
+		\item[Nregions] Número de regiones de manejo.
+		\item[Nreplicates] Número de simulaciones de Monte-Carlo a realizar. 
+		\item[Nsurveys] Número de evaluaciones utilizadas para determinar el procedimiento de manejo????
+		\item[Nt] Número de intervalos temporales en los que se divide el año.
+		\item[Nt\_Season] Número de unidades de tiempo que dura la temporada de pesca. 
+		\item[Nyears] Número de años ($Anho_{Final}-Anho_{Inicial}+1$).
+		
+		
+		% -- O -- %
+		\item[ObsError\_Survey] Error de observación de la evaluación. 1. Determinístico; 2. Estocástico. CONTROL
+		\item[ObsAbundance{[}FilasHoja, 4{]}] Abundancia observada. Se cargan las 4 columnas (Year, Area, Index, CV) de \emph{ObsAbundance}.
+		\item[ObsBvul{[}FilasHoja, 4{]}] Índice de biomasa vulnerable observada. Se cargan las 4 columnas (Year, Area, Index, CV) de \emph{ObsBvul}.
+		\item[ObsCatch{[}Nyears, Nareas{]}] Capturas observadas (se obtienen de la hoja \emph{ObsCatch})
+		\item[ObsRec{[}Nyears, Nareas{]}] Reclutamiento observado (se obtiene de la hoja de cálculo \emph{ObsRec})
+		\item[Output\_Nage\_Nsize] Variable booleana. ¿Qué hace??? CONTROL
+		\item[Output\_Size\_W] Variable booleana. ¿Qué hace?? CONTROL
+		
+		% -- P -- %
+		\item[PartialSurveyFlag] Variable booleana. ¿Se hace sólo evaluación parcial? CONTROL
+		\item[pL{[}Nyears, Nareas, Nilens{]}] Porcentaje de individuos de cada clase de talla que hay en la población.
+		\item[pLage{[}Nareas, Nages, Nilens{]}] Porcentaje de individuos de la misma clase de edad para cada clase de talla. Siguen una distribución normal de esta forma ($e^{\frac{-1}{2 \sigma^2} (l-\mu)^2}$)		
+		\item[ProcError\_Rec] Error de proceso en el reclutamiento. 1. Determinístico; 2. Estocástico. CONTROL
+		\item[ProcError\_InitConditions] Error de proceso en condiciones iniciales. 1. Determinístico; 2. Estocástico. CONTROL
+		\item[PulseHR] Tasa de explotación a la que se ven sometidas las áreas abiertas a la pesca en ausencia de restricciones. Utilizado en sistemas de rotación donde en general se controlan las áreas que se abren y se asume que se va a pescar casi todo de esas áreas. 
+		\item[PulseHRadjust] Ajuste de la tasa de explotación. Por defecto es 1 (es decir, no hay que ajustarla). Se calcula en \emph{Strategies()} (ManagementProcedures).
+		   
+		% -- Q -- %
+		\item[Q{[}Nareas{]}] Coeficiente de capturabilidad.Sus unidades son $unidades.de.esfuerzo^{-1}$.
+		\item[q\_Rec] ????? CONTROL
+		
+		% -- R -- %
+		\item[R0] Reclutamiento en condiciones vírgenes. (En número de individuos).
+		\item[Rec] Tipo de reclutamiento: 1. Constante; 2. Densodependiente. CONTROL
+		\item[Rdev{[}Nyears, Nareas{]}] Vector con las desviaciones en el reclutamiento. Estas desviaciones se calculan con \emph{RecruitmentDevs()} y están correlacionadas temporalmente por el factor $\rho=RecTimeCor$.
+		\item[RecCV] Coeficiente de variación en el reclutamiento.
+		\item[RecTimeCor] Correlación temporal en el reclutamiento (de un año a otro). (No tiene unidades)
+		\item[Region{[}Nareas{]}] Indica a qué región de manejo pertenece cada área.
+		\item[ReOpenConditionFlag] Variable booleana. ¿Comprobar condición de reapertura? CONTROL
+		\item[ReOpenCondition] Fracción de la población que se tiene que recuperar para abrir un área.
+		\item[RestingTime{[}Nareas{]}] Vector de secuencia en el que se coloca ¿el orden inicial en el que se van explotando las áreas?
+		\item[RestingTimeFlag] Variable booleana. ¿Utilizar tiempo de descanso? CONTROL
+		\item[Rho{[}Nareas{]}] $e^{-k}$
+		\item[Rmax{[}Nareas{]}] Reclutamiento máximo por área. Aunque en el Input se introduce por $m^2$ al inicializar las variables se recalcula la total por área.
+		\item[Run\_type] Tipo de ejecución: 1. Conditioning; 2. Simulación. CONTROL
+		
+		% -- S -- %
+		\item[SB0{[}Nareas{]}] Biomasa desovante en capacidad de carga. Se tiene que calcular ya que la  Biomasa desovante en carrying capacity sólo se estaba calculando para los individuos de $Stage+1$ en adelante (porque la biomasa del Stage se le añade cuando se calculan los reclutas)
+		\item[SBR0{[}Nareas{]}] Biomasa desovante por recluta. Biomasa de desovantes que produce un recluta a lo largo de su vida.
+		\item[sd{[}Nyears, Nareas, Nages{]}] $CVmu(Area) mu$
+		\item[sdTmp{[}Nareas, Nages{]}] sd
+		\item[Sens] Sensibilidad al cambio. 
+		\item[Settlers{[}Nyears, Nareas{]}] Número de individuos que se asientan. Se calculan en \emph{Alloc\_Larvae()} y en \emph{Set\_Virgin\_Conditions()}. 
+		\item[SimEndYear] StYear + 200
+		\item[Stage] Edad inicial.
+		\item[StYear] Año de inicio.
+		\item[Surface{[}Nareas{]}] $m^2$ que tiene cada área.
+		\item[SurveyCV] Coeficiente de variación de las evaluaciones?
+		
+		% -- T -- %
+		\item[t0{[}Nareas{]}] $t_0$ (von Bertalanffy).
+		\item[TAC{[}Nyears{]}] Cuota de capturas por año.
+		\item[TAC\_area{[}Nyears, Nareas{]}] Matriz con cuotas anuales por área.
+		\item[TAC\_region{[}Nyears, Nregions{]}] Matriz con cuotas de captura anuales por región.
+		\item[TAE\_area{[}Nyears, Narea{]}] Matriz con cuotas anuales de esfuerzo por área.
+		\item[TAE\_region{[}Nyears, Nregions{]}] Matriz con cuotas anuales de esfuerzo por región. 
+		\item[TAC\_TAE\_HR] Control por: 1. TACs (Cuotas) 2. TAEs (Esfuerzo) 3. Tasas de explotación (HR). CONTROL
+		\item[TargetHR] Tasa de explotación objetivo.
+		\item[TargetSurface] Superficie a explotar (TargetHR*TotalSurface).
+		\item[TotalSurface] Superficie total (suma de la superficie de todas las áreas de pesca).
+		\item[t\_stSeason] Unidad de tiempo en la que comienza la temporada de pesca. (¿Qué pasa cuando la temporada va desde finales de un año a principios del siguiente?Mirar en el código qué haría?)
+		
+		% -- V -- %
+		\item[VB0{[}Nareas{]}] Biomasa vulnerable en condiciones vírgenes. 
+		\item[WvulStage{[}Nareas{]}] Biomasa vulnerable de la primera clase de edad.
+		
+		% -- W -- %
+		\item[w{[}Nyears, NAreas, Nages{]}] Peso promedio de los individuos de una clase de edad.
+		\item[W\_L{[}Nareas, Nilens{]}] Pesos de las distintas clases de tamaño según $Weight=a Lenght^b$
+		\item[WvulStage{[}Nareas{]}] Biomasa promedio de la primera clase de edad. ¿Por qué se llama WvulStage?
+		   
+		% -- Z -- %
+		\item[Z{[}Nareas, Nages, NpulsosMax{]}] Vector que contiene los valores en donde se produjeron discontinuidades en la distribuión de tallas debido a la pesca. Toma valor 0 en Preliminary\_Calcs. En PopDyn() cambia los valores.
+		\item[Zvector{[}10000{]}] Se cargan de la hoja Zvector.
+		Vector de números aleatorios según una $N(0,1)$.
+		
+		\end{description}

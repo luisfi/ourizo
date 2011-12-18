@@ -1,0 +1,24 @@
+\BOOKMARK [1][]{section.1}{Estructura b\341sica}{}
+\BOOKMARK [2][]{subsection.1.1}{Recepci\363n de nuevos \215settlers\216}{section.1}
+\BOOKMARK [2][]{subsection.1.2}{Producci\363n y distribuci\363n de larvas}{section.1}
+\BOOKMARK [2][]{subsection.1.3}{Estrategias de manejo}{section.1}
+\BOOKMARK [2][]{subsection.1.4}{Asignaci\363n del esfuerzo de pesca}{section.1}
+\BOOKMARK [2][]{subsection.1.5}{Din\341mica de cada subpoblaci\363n bent\363nica}{section.1}
+\BOOKMARK [2][]{subsection.1.6}{Esquema general}{section.1}
+\BOOKMARK [2][]{subsection.1.7}{Definiciones principales}{section.1}
+\BOOKMARK [1][]{section.2}{Simulaci\363n: Paso a paso}{}
+\BOOKMARK [2][]{subsection.2.1}{Diagrama de secuencias: Flujo de ejecuci\363n}{section.2}
+\BOOKMARK [2][]{subsection.2.2}{Preliminary\137Calcs}{section.2}
+\BOOKMARK [2][]{subsection.2.3}{M2\137Random\137Stuff}{section.2}
+\BOOKMARK [2][]{subsection.2.4}{M4\137Calc\137Recruits}{section.2}
+\BOOKMARK [2][]{subsection.2.5}{M2\137Annual\137Update.pLgen\(\)}{section.2}
+\BOOKMARK [2][]{subsection.2.6}{M6\137Prod\137Alloc\137Larvae}{section.2}
+\BOOKMARK [2][]{subsection.2.7}{Management\137Procedures}{section.2}
+\BOOKMARK [2][]{subsection.2.8}{M7\137Fishing}{section.2}
+\BOOKMARK [2][]{subsection.2.9}{M5\137Popdyn}{section.2}
+\BOOKMARK [2][]{subsection.2.10}{M2\137AnnualUpdate}{section.2}
+\BOOKMARK [2][]{subsection.2.11}{Print\137Output}{section.2}
+\BOOKMARK [2][]{subsection.2.12}{Graphs}{section.2}
+\BOOKMARK [1][]{section.3}{Library Functions}{}
+\BOOKMARK [1][]{section.4}{Variables del Programa}{}
+\BOOKMARK [1][]{section.5}{Novedades y cambios respecto a la versi\363n anterior}{}
