@@ -1,0 +1,47 @@
+=== Metapesca: Changelog MP Rotación===
+
+
+CAMBIOS EN LA HOJA DE Cálculo INPUT:
+  - Añadir nuevos parámetros de entrada al código: Nuevos parámetros en el ``INPUT``:
+   - ln. 101. Rotation Strategy: (1) Rotation by TAC (2) Rotation by TAE (3) Rotation by Surface Area (4) Rotation by Period
+   - ln. 107. col. 1: Se quita el if anterior TRUE: Ahora queda simplemente como Resting Time
+   - ln. 108. Rotation Period: vector con dimensiones Nareas, con el periodo de rotación. Si Resting Time es igual o mayor a Periodo de rotación, entonces se pesca el área. 
+
+
+
+CAMBIOS EN Management_Procedures (Strategies()):
+- En Case 1 'Rotation:
+- Se movió el If de Feedback=True para fuera de bucles y condicionales. Ahora se ejecuta siempre al entran en el MP de rotación. 
+ - Se eliminaron los IFs y se cambiaron por Select Cases según:
+  - Rotation Strategy: (1) Rotation by TAC (2) Rotation by TAE (3) Rotation by Surface Area (4) Rotation by Period
+
+- Rotation by Period: 
+Hay que ver el estado en el que se encuentra la rotación, abrir las áreas que hay que abrir y actualizar el vector de restingtime.
+
+RotationPeriod(Area)
+
+
+
+CAMBIOS EN Read_Input:
+- ln. 35: ``row_connectivity = 131`` en vez de 129
+- ln. 158: 
+``Nsurveys = Worksheets("Input").Rows(row_management_control + 29).Columns(2)`` en vez de 27.
+- ln. 170: Añadido 
+``RunFlags.RotationType = Worksheets("Input").Rows(row_management_control + 14).Columns(2)``
+- ln. 177: Reemplazado ``TAC_TAE_HR`` por ``RunFlags.RotationType``
+- ln. 183: 15 en vez de 14 en el número de filas. 
+- ln. 191-197: Se le suma una fila al número de fila que lee. 
+- ln. 201: Se añadió a la condición: ``Or (RunFlags.RotationType = 4)``
+- ln. 204: Se añade una fila (de 19 a 20)
+- ln. 205: Se añade fila:
+``RotationPeriod(Area) = Worksheets("Input").Rows(row_management_control + 21).Columns(1 + Area)``
+- ln.249-255: Se añaden 2 al número de filas en las que lee.
+
+
+CAMBIOS EN M1_VarDef:
+- Añadido en ln. 157: ``RotationType As Integer``
+- Añadido en ln. 48: ``Public RotationPeriod() As Integer``
+
+
+CAMBIOS EN Print_Output:
+- ln. 175 y ln. 195, ln.255, ln. 267, ln. 279: Se cambia "Metapesca26.1" por "Metapesca" a secas. Ahora la versión la da el VCS y no el nombre del programa. 

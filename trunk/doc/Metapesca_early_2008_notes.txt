@@ -1,0 +1,223 @@
+METAPESCA
+XXXXXXXXXXXXXXXXXXXXXXXXX
+
+Módulos:
+----------------------
+Graph
+M0_Main
+M1_VarDef
+M2_AnnualUpdate
+M2_Conditioning
+M2_Random_Stuff
+M3_Alloc_Larvae
+M4_Calc_Recruits
+M5_Popdyn
+M6_Prod_Larvae
+M7_Fishing
+M8_Library
+Main_Menu
+Management_Procedure
+Preliminary_Calcs
+Print_Output
+Read_Input
+------------------------
+____________________________
+Graph
+____________________________
+
+Sub graph()
+
+Sub clean(dd) <- Seleccionar la hoja 'dd' y borrarla. 
+
+Sub referenciagraph()
+____________________________
+M0_Main
+____________________________
+
+Sub Main() <--- Modelo en si. 
+
+	Coge el tiempo inicial de la Hoja 'Time' Celda 1,2.
+        Elimina Output si lo hay.
+	Print_Output.Output_Initialize
+	Read_Input
+	Preliminary_Calcs (Initialize_variables, Set_Virgin_Conditions, Set_Initial_Conditions)
+
+	IF: Conditioning Run: M2_Conditioning (Conditioning, FitData, CalcLikelihood)
+	ELSE: 
+		- Preliminary_Calcs.Rescale_parameters
+		- Simulaciones de Monte-Carlo:
+			* M2_Random_Stuff (VariableInitialConditions, RecruitmentDevs)
+			* M4_Calc_Recruits
+			* Si hay más de 1 réplica: M2_AnnualUpdate.pLgen(year) Probabilidad de la talla.
+			* M6_Prod_Larvae
+			* M3_Alloc_Larvae
+			* Management_Procedure.Strategies
+			* M7_Fishing (si hay) // Tiene para mensual
+			* M5_Popdyn // Indem
+			* M2_AnnualUpdate
+			* Print_Output.Print_Output(monte)
+			* Print_Output.Print_Input
+			* Graph.Graphs
+			
+	
+
+____________________________
+M1_VarDef
+____________________________
+
+Variable Declaration: Lista de variables globales (En los comentarios dice que permite la utilización en la interfaz de varios idiomas)
+
+ScaleFlag: 1-Sin tranformar // 2-Cuadrática // 3-Logaritmica
+Run.Flags.Growth_type: 1-Crecimiento densoindependiente // 2-Denso-dependencia lineal
+Run.Flags.Rec: 1-Reclutamiento contante // 2-Compensación lineal
+Flag_Rec_Fish(Area, age) : 1- Not recruited // 2-Partially recruited // 3- Fully recruited
+RunFlags.Initial_Conditions: 1- Condiciones iniciales en K // 2-Inicializa en K y simula hacia delante bajo condiciones de harvest rate constante = HR_start(area) // 3-Lee condiciones iniciales de un archivo
+RunFlags.Run_type: 1-Conditioning  // Else- Simulation
+Run.Flags.Hstrategy: 1: Rotaciones (Annual) // 2-Manejo espacial (Annual & Individual por área) // 3: Global o Regional (nivel de distribución de esfuerzo entre áreas, por ejemplo IFDs (Ideal Free Distribution) // Else: Gravitacional (de momento comentado. no hace nada)
+
+
+____________________________
+M2_AnnualUpdate
+____________________________
+
+Sub Annual_update(year) <- Para todas las áreas de cada región y para todas las edades, calcula la progresión de las cohortes (calcula los individuos de cada clase de edad que hay de un año para otro)
+Sub pLgen(year) <- ¿Print pL anuales por área? ¿Qué los los pL?
+
+____________________________
+M2_Conditioning
+____________________________
+
+Sub Conditioning() <- Calcula HTTmp(Area) y Catch(year, Area) para cada año.
+		      Calcula tb el PenaltyCatch (¿Qué es?)
+			Llama a	M4_Calc_Recruits <- Calcula reclutas
+				M6_Prod_Larvae <- Calcula producción larvaria
+				M3_Alloc_Larvae <- Dispersión de larvas
+				M5_Popdyn <- Tamaños poblacionales
+				M2_AnnualUpdate
+
+
+Sub FitData() <- Saca datos en la hoja 'OutTuning' para Year, Area, Region, Recruits, ObsRec, Bvulnerable, ObsBvul, Abundance, ObsAbundance.
+Sub CalcLikelihood() <- Imprime los valores de Likelihood en la hoja 'OutTuning' en las columnas 10 y 11.
+
+____________________________
+M2_Random_Stuff
+____________________________
+
+Sub VariableInitialConditions() <- Nota: Buscar zvector()
+Sub RecruitmentDevs() <- En los comentarios pone: 'esto es para autocorrelacionados en el tiempo pero no en el espacio. Hay que generalizar'
+____________________________
+M3_Alloc_Larvae
+____________________________
+
+Sub Alloc_Larvae(Year) <- Toma larvas de cada área y salen larvas que llegan a cada área. (Sumatorio de larvas(i)*coeficiente de matriz de conectividad (Area a calcular, i)
+____________________________
+M4_Calc_Recruits
+____________________________
+
+Sub Deterministic_Recruits(year) <- Toma larvas que llegan a cada área y saca age 1 en cada area. Proceso local en cada area.
+Sub Random_Recruits(year) <- Idem
+Sub Tunned_Recruits(year) <- Usa reclutamientos tomados de input file. Asume que el reclutamiento observado no tiene error. 
+---------
+Function Double MinValue(Double n1, Double n2)
+Function Double MaxValue(Double n1, Double n2)
+
+____________________________
+M5_Popdyn 
+____________________________
+
+Sub PopDyn(year) <- Tiene en cuenta tipo de crecimiento, reclutamiento... 
+Sub Maturity(AgeFullMature, FracMat) <- Asigna 1 a los maduros y 0 a los inmaduros.
+____________________________
+M6_Prod_Larvae
+____________________________
+
+Sub Prod_Larvae(year) <- Calcula biomasa desovante multiplicando biomasa madura por el coeficiente ProdXB (Relación lineal)
+
+____________________________
+M7_Fishing
+____________________________
+
+Sub Fishing(year, t)
+____________________________
+M8_Library
+____________________________
+
+/* Listado de funciones */
+
+Public Function Cumd_Norm(x) <- Calculate the cumulative of a standardized normal curve.
+Public Function normal(mean, stdev) As Double
+Sub Norm(Area, age)
+Sub Trunc_Norm(Area, age)
+Sub QuickSort(List() As Integer)
+Sub RandomizeVector(Xj() As Integer)
+Public Function Multiplyv2(Mat189 As Variant, Mat2() As Variant) As Variant <- Multiply two matrices
+
+____________________________
+Management Procedures
+____________________________
+
+Sub DoSurvey(year) <- Las units pueden ser de n�meros y biomasa (biomasa est� comentado). Est� implementado sobretodo para el caso del Geoduck.
+Sub Strategies(year)<- Estrategias: 1-. Rotaciones; 2-. �rea por �rea (anual); 3-. Regi�n
+	Rotaciones: Cierra todas las �reas. 
+			* Si hay cuota y s�lo se hacen surveys en las candidate areas, entonces se calcula la TAC en funci�n de la biomasa de las areas candidatas y la HR. 
+			* Si hay cuota y hay feedback: Hacer surveys. Calcular los TACs 
+
+____________________________
+Main_Menu
+____________________________
+
+Sub Makemenu() <-- Crear barra de menú Metapesta 
+Sub Removemenu() <-- Not called
+Sub DeleteMenuBar() <--Not called
+Sub GotoForm1() <-- 'Main_Form' Dialog: To select input case-study.
+Sub CodeMessage() <--"Press Alt+F11 to Edit Code"
+Sub GotoForm2() <-- 'New File' Form: To create new 'model'.
+Sub GotoForm3() <-- Form 'About'
+Sub RestoreExcelMenuMetapesca() <-- Restore Excel menu bar (With Metapesca Tab)
+Sub ShowConectividad() <-- 'Connectivity Dialog': Changes the connectivity matrix in the INPUT sheet.
+Sub ShowManagement() <-- "Please modify management options from 'Input' Sheet"
+Sub ShowOutputOptions() <-- 'Output Options' Dialog. 
+Sub ShowPopDyn() <-- Shows 'Population dynamics' dialog.
+Sub Goto_Export_dat() <-- Calls Main_Form function Export_dat()
+Sub GotoCondicionesIniciales() <-- Opens dialog to select initial conditions (carrying capacity, fixed harvest rate, input file)
+Sub Goto_Zoom() <-- Opens Zoom Dialog (100%, 75%, 50% ...)
+
+____________________________
+Prelimirary_Calcs
+____________________________
+
+Sub Initialize_variables()
+Sub Set_Virgin_Conditions() <- Comentarios del código:
+					Por el medio: 'Aca estimo cuantos anios proyectar largos y pesos para representar adecuadamente los valores	inciales del plusgroup de manera de proyectar hasta una edad Amax correspondiente al 0.001 de la abundandia inicial al reclutamiento'
+					' Initialize calculation of pL of  Plus group and store pL for StAge'
+					'Compute average of mu of the Plus group'
+					'Calcular pLtmp only for this plus group'
+					'Estimar Reclutamiento inicial'
+					'Get FracMat() vector from Maturity Function'
+					'BvulTmp is needed for Fishing and BtotTmp for density-dep growth'
+					'compute minimum'
+					'This loop initialize Larvae for years before the start of the model when StAge is different than 1'
+					'Printing Virgin Conditions'
+
+Sub Set_InitialConditions() <- O las lee de fichero o la saca que empiece en capacidad de carga.
+Sub Rescale_parameters() <- Para cada área hace: M(Area) = M(Area) / Nt
+        					k(Area) = k(Area) / Nt
+        					Rho(Area) = Exp(-k(Area))
+
+____________________________
+Print_Output
+____________________________
+
+Sub Output_Initialize() 
+Sub Print_Output(monte)
+Sub Print_Output_Nage_NSize(monte)
+Sub Print_Input()
+Sub Print_Size_W()
+
+____________________________
+Read_Input
+____________________________
+
+Sub ReadInput()
+
+
