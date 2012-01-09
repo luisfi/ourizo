@@ -5,7 +5,7 @@ Dim row_parameters As Integer, row_area_atributes As Integer, row_Population_Dyn
     row_global_parameters As Integer, row_parameters_biol_region As Integer, row_parameters_area As Integer, _
     row_initial_conditions As Integer, row_connectivity As Integer, _
     row_management_control As Integer, row_run_options As Integer, row_catch_specification As Integer, row_effort_specification As Integer, _
-    row_input_conditioning As Integer, row_reopening_conditions As Integer
+    row_input_conditioning As Integer, row_reopening_conditions As Integer, row_rotation_by_period As Integer
 
 Sub Read_Input()
 
@@ -30,14 +30,14 @@ row_global_parameters = 54
 row_parameters_biol_region = 60
 row_parameters_area = 72
 row_initial_conditions = 80
-row_management_control = 87
-row_reopening_conditions = 4
 
-row_connectivity = 135
+row_management_control = 87
+row_reopening_conditions = row_management_control + 18
+row_rotation_by_period = row_reopening_conditions + 6
+
+row_connectivity = 142
 row_catch_specification = row_connectivity + Nareas + 3
 row_effort_specification = row_catch_specification + Nyears + 3
-
-
 
 
 'GIVE DIMENSIONS TO BIOLOGICAL DYNAMIC OBJECTS
@@ -156,7 +156,7 @@ TargetHR = Worksheets("Input").Rows(row_management_control + 10).Columns(2)
 
 Nt_Season = Worksheets("Input").Rows(row_management_control + 11).Columns(2)
 t_StSeason = Worksheets("Input").Rows(row_management_control + 12).Columns(2)
-Nsurveys = Worksheets("Input").Rows(row_management_control + 29 + row_reopening_conditions).Columns(2)
+Nsurveys = Worksheets("Input").Rows(22 + row_reopening_conditions).Columns(2)
 
 
 If (Nt_Season > Nt) Or (t_StSeason > Nt) Then
@@ -193,31 +193,53 @@ Case 1  'Rotation
     PulseHR = Worksheets("Input").Rows(row_management_control + 16).Columns(2)
     
     ReOpenConditionFlag = Worksheets("Input").Rows(row_management_control + 17).Columns(2)
+    
+    'Reopen Conditions
     NOpenConditions = 4
     
-    ReDim ReOpenCondition(NOpenConditions)
-    ReDim ShortenTolerance(NOpenConditions)
-    ReDim ReOpenConditionValues(NOpenConditions)
+    ReDim ReOpenCondition(Nareas)
+    ReDim ShortenTolerance(Nareas)
+    ReDim ReOpenConditionValues(Nareas, NOpenConditions)
     
-    For i = 1 To NOpenConditions
-        ReOpenCondition(i) = Worksheets("Input").Rows(row_management_control + 17 + i).Columns(2)
-        ShortenTolerance(i) = Worksheets("Input").Rows(row_management_control + 17 + i).Columns(3)
+    ReDim RCPreharvestBiomass_Fraction(Nareas)
+    ReDim RCPreharvestBiomass_Tolerance(Nareas)
+    ReDim RCMinimumDensity(Nareas)
+    ReDim RCMinimumDensity_Tolerance(Nareas)
+    ReDim RCMatures_Fraction(Nareas)
+    ReDim RCMatures_Tolerance(Nareas)
+    ReDim RCGreaterSize_Fraction(Nareas)
+    ReDim RCGreaterSize_Size(Nareas)
+    ReDim RCGreaterSize_Tolerance(Nareas)
+    
+    For i = 1 To Nareas
+        RCPreharvestBiomass_Fraction(i) = Worksheets("Input").Rows(row_reopening_conditions + 1).Columns(i + 1)
+        RCMinimumDensity(i) = Worksheets("Input").Rows(row_reopening_conditions + 2).Columns(i + 1)
+        RCMatures_Fraction(i) = Worksheets("Input").Rows(row_reopening_conditions + 3).Columns(i + 1)
+        RCGreaterSize_Fraction(i) = Worksheets("Input").Rows(row_reopening_conditions + 4).Columns(i + 1)
+        RCGreaterSize_Size(i) = Worksheets("Input").Rows(row_reopening_conditions + 5).Columns(i + 1)
     Next i
     
     
-    RestingTimeFlag = Worksheets("Input").Rows(row_management_control + 18 + row_reopening_conditions).Columns(2)
+    RestingTimeFlag = Worksheets("Input").Rows(row_rotation_by_period + 1).Columns(2)
     
     
     If (RestingTimeFlag = True) Or (RunFlags.RotationType = 4) Then 'If areas to be ordered by restingtime or if rotation by period
         ReDim RestingTime(Nareas)
         ReDim RotationPeriod(Nareas)
         For Area = 1 To Nareas
-            RestingTime(Area) = Worksheets("Input").Rows(row_management_control + 19 + row_reopening_conditions).Columns(1 + Area)
-            RotationPeriod(Area) = Worksheets("Input").Rows(row_management_control + 20 + row_reopening_conditions).Columns(1 + Area)
+            RestingTime(Area) = Worksheets("Input").Rows(row_rotation_by_period + 2).Columns(1 + Area)
+            RotationPeriod(Area) = Worksheets("Input").Rows(row_rotation_by_period + 3).Columns(1 + Area)
         Next Area
     End If
     
-    AdaptativeRotationFlag = Worksheets("Input").Rows(row_management_control + 21 + row_reopening_conditions).Columns(2)
+    AdaptativeRotationFlag = Worksheets("Input").Rows(row_rotation_by_period + 4).Columns(2)
+    
+    For i = 1 To Nareas
+        RCPreharvestBiomass_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 5).Columns(i + 1)
+        RCMinimumDensity_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 6).Columns(i + 1)
+        RCMatures_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 7).Columns(i + 1)
+        RCGreaterSize_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 8).Columns(i + 1)
+    Next i
     
 Case 2  'By Area
     If (Nt_Season > 1) Then
@@ -314,7 +336,8 @@ RunFlags.InputAbundance = Worksheets("Input").Rows(row_input_conditioning + 3).C
 RunFlags.AbundanceType = Worksheets("Input").Rows(row_input_conditioning + 3).Columns(3)
 RunFlags.InputCatch = Worksheets("Input").Rows(row_input_conditioning + 4).Columns(2)
 
-SurveyCV = Worksheets("Input").Rows(row_management_control + 33 + row_reopening_conditions).Columns(2)
+pLopt = Worksheets("Input").Rows(row_rotation_by_period + 17 + 1).Columns(2)
+SurveyCV = Worksheets("Input").Rows(row_rotation_by_period + 17 + 3).Columns(2)
 InitialCV = Worksheets("Input").Rows(row_initial_conditions + 3).Columns(2)
 RecCV = Worksheets("Input").Rows(row_Population_Dynamics + 2).Columns(2)
 

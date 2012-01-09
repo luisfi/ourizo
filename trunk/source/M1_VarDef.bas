@@ -41,6 +41,15 @@ Public TargetHR As Double
 Public PulseHR As Double
 Public PulseHRadjust As Double
 Public TargetSurface As Double
+Public RCPreharvestBiomass_Fraction() As Double
+Public RCPreharvestBiomass_Tolerance() As Double
+Public RCMinimumDensity() As Double
+Public RCMinimumDensity_Tolerance() As Double
+Public RCMatures_Fraction() As Double
+Public RCMatures_Tolerance() As Double
+Public RCGreaterSize_Fraction() As Double
+Public RCGreaterSize_Size() As Double
+Public RCGreaterSize_Tolerance() As Double
 Public ReOpenConditionFlag As Boolean
 Public PartialSurveyFlag As Boolean
 Public ReOpenCondition() As Double
@@ -66,7 +75,7 @@ Public OpenMonth() As Boolean
 Public Bregion() As Integer
 
 'Varies accros Year, Age and Area
-Public N() As Double, mu() As Double, sd() As Double
+Public n() As Double, mu() As Double, sd() As Double
 
 'Varies accros years and areas
 Public Bvulnerable() As Double
@@ -75,11 +84,17 @@ Public effort() As Double
 Public Larvae() As Double
 Public Bmature() As Double
 Public Btotal() As Double
-Public Survey() As Double
+Public SurveyBvul() As Double
 Public SurveyAll() As Double
+Public SurveyNage() As Double
+Public SurveyNtot() As Double
+Public SurveyMat() As Double
+Public SurveypL() As Double
+
 
 'Public SurveyUnit() As Double
 'Public SurveyVariable() As Double
+Public pLopt As Boolean
 Public Nsurveys As Integer
 'Public SurveyQ() As Integer
 'Public SurveyCV() As Integer
