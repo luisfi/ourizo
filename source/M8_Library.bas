@@ -360,4 +360,53 @@ Attribute Multiplyv2.VB_ProcData.VB_Invoke_Func = " \n14"
         
 End Function
 
+Public Function rmultinom(n As Integer, size() As Double, prob() As Double) As Variant
+' Generate multinomially distributed random number vectors
 
+    'Check dimensions
+    If UBound(size) <> UBound(prob) Then
+        MsgBox ("Error: In rmultinom function, vectors size() and prob() are not the same length")
+        End
+    End If
+    
+    Dim randomvector As Double
+    Dim multiLength As Integer
+    multiLength = UBound(size) 'number of multinomial classes
+    Dim probAcum As Double
+    Dim liminter() As Double
+    Dim vmultinom() As Double
+    ReDim liminter(1 To multiLength + 1)
+    ReDim vmultinom(1 To multiLength)
+
+ 
+    ' Generate multinomial intervals
+    probAcum = 0
+    For j = 1 To i = multiLength
+        liminter(j) = probAcum
+        probAcum = probAcum + prob(j)
+    Next j
+        liminter(multiLength + 1) = 1
+        'Igual aquí habría que ponerle un comprobante para ver si probacum ==1
+    
+    'Check correspondence between random numbers and multinomial intervals
+    For i = 1 To n
+    
+        randomvector = Rnd() 'Random numbers uniformly distributed from 0 to 1
+        
+        For j = 1 To multiLength
+            If liminter(j) <= randomvector And randomvector < liminter(j + 1) Then
+                vmultinom(j) = vmultinom(j) + 1
+                Exit For 'Sale del loop una vez que encuentra que el valor esta dentro de uno de los intervalos
+            End If
+        Next j
+    Next i
+    
+    'Convert to proportions
+    For j = 1 To multiLength
+        vmultinom(j) = vmultinom(j) / n
+    Next j
+    
+    'Return
+     rmultinom = vmultinom ' Returns vmultinom
+     
+End Function

@@ -34,9 +34,9 @@ Last Year	2050
 Number of steps intrayear (Nt)	1								
 Start Age	1								
 Age Plus Group	8								
-First Size L1	1								
-Size Increment Linc	3								
-Number of size clases	40								
+First Size L1	2								
+Size Increment Linc	1								
+Number of size clases	120								
 									
 Area attributes									
 Area index	1	2	3	4					
@@ -102,14 +102,21 @@ If rotation
 Survey only candidate areas instead of all areas on feedback? 	FALSE								
 Target Harvest Rate for pulse fishing	0.9								
 Check condition to reopen?	TRUE								
-  Reopening Condition: Fraction of Preharvest Biomass to Reopen / Second Columm: Shorten Period Tolerance	0.5	0.1							
-  Reopening Condition: Minimum density threshold	0	0.1							
-  Reopening Condition: % Mature Individuals	0	0.1							
-  Reopening Condition: % of Individual size greater than (B.%;C.Size)	0	0.1							
+ If Reopening Condition									
+  Reopening Condition: Fraction of Preharvest Biomass to Reopen / Second Columm: Shorten Period Tolerance	0.5	0.5	0.5	0.5					
+  Reopening Condition: Minimum density threshold of vulnerable individuals (above legal size)	0	0	0	0					
+  Reopening Condition: Fraction of Mature Individuals	0.6	0.6	0.6	0.6					
+  Reopening Condition: Fraction of Individual size greater than (B.%;C.Size)	0.5	0.5	0.5	0.5					
+      ReopenAdditionalParameters RC 4: Size	55	55	55	55					
+ If Rotacion by Period									
 Use Resting time (or other ranking criteria) to set Rotation Order?	FALSE								
 Resting Time (or other criteria; by area)	1	2	3	4					
 Rotation Period (by area)	4	4	4	4					
-Adaptative Rotation? (Just for rotation by period with reopening condition)	FALSE								
+Adaptative Period? (Just for rotation by period with reopening condition)	FALSE								
+  RC 1: Shorten Tolerance	0.1	0.1	0.1	0.1					
+  RC 2: Shorten Tolerance	0.1	0.1	0.1	0.1					
+  RC 3: Shorten Tolerance	0.1	0.1	0.1	0.1					
+  RC 4: Shorten Tolerance	0.1	0.1	0.1	0.1					
 If by Region:									
 "Fishing Effort Distribution (1- IFD, 2- IFD-Walters & Martel, 3-Gravitational. NOT READY YET)"	2								
 "    IF IFD, Sensitivity parameter of fishing behaviour"	0.01								
@@ -119,10 +126,10 @@ If by Region:
 If Feedback (Closed-Loop)									
 Number of Surveys used in MP rule (Implemented 1)	1								
 Survey 1									
-Survey Unit (1 Numbers or 2 Biomass) one value per survey	2								
+pLopt (size structure?)	TRUE								
 Survey q	1								
 Survey CV	0.1								
-"Survey Population (1 Vulnerable, 2 Mature, 3 Total, 4 Specified Selectivity)"	1								
+	1								
 "   IF Specified Selectivity, Input age selectivity vector"									
 Survey 2									
 Survey Unit (1 Numbers or 2 Biomass) one value per survey	2								

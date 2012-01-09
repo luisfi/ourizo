@@ -82,8 +82,8 @@
 			\paragraph{Random\_Recruits()} 
 				Dos opciones: 
 					\begin{enumerate}
-						\item Reclutamiento constante: $N_{t,i,edadinicial}= R_0 \cdot e^{Rdev-0.5 RecCV^2}$.
-						\item Compensación lineal: $N_{t,i,edadinicial}=Settlers \cdot e^{Rdev-0.5 RecCV^2} $. Y está limitado a ser menor o igual que el menor de la $\frac{K - Btotal}{w_0}$ (condicionado a ser igual o mayor que cero) y el reclutamiento máximo que puede albergar el área($RMax$).
+						\item Reclutamiento constante: $N_{t,area,age_{0}}= R_{0_{area}} \cdot e^{Rdev_{t,area}- \frac{1}{2} CV_{Rec}^2}$.
+						\item Compensación lineal: $N_{t,area,age_{0}}=Settlers_{t, area} \cdot e^{Rdev_{t,area}- \frac{1}{2} CV_{Rec}^2}$. Y está limitado a ser menor o igual que el menor de la $\frac{K - B_{total}}{w_0}$ (condicionado a ser igual o mayor que cero) y el reclutamiento máximo que puede albergar el área($RMax$).
 					\end{enumerate}
 				
 			
