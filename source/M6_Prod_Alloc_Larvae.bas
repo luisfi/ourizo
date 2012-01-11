@@ -1,10 +1,22 @@
 Attribute VB_Name = "M6_Prod_Alloc_Larvae"
 Dim Area As Integer, i As Integer, Z() As Double, R0() As Double, B0() As Double
 
-Sub Prod_Alloc_Larvae(year, SB)
-'Toma biomasa desovante, produce larvas y las reparte
+Sub Prod_Alloc_Larvae(year, Optional SB)
+'Calcula biomasa desovante, produce larvas y las reparte
 'puede ser relacion simplemente lineal
 '
+ If IsMissing(SB) Then 'función IsMissing() retorna el valor True si NO se ha enviado el parámetro que queremos comprobar
+   For Area = 1 To Nareas
+        Bmature(year, Area) = 0
+        For age = Stage + 1 To AgePlus
+            Bmature(year, Area) = Bmature(year, Area) + n(year, Area, age) * (1 - HRTmp(Area) * PreReprHR) * w(year, Area, age) * FracMat(age)
+        Next age
+   Next Area
+   'Dim SB() As Double
+   'ReDim SB(Nyears, Nareas)
+   SB = Bmature
+End If
+   
    For Area = 1 To Nareas
        Larvae(year, Area) = SB(year, Area) * ProdXB
    Next Area
@@ -19,4 +31,5 @@ Sub Prod_Alloc_Larvae(year, SB)
    Next Area
 
 End Sub
+
 

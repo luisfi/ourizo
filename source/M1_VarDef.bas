@@ -29,6 +29,8 @@ Public Ndias_beforeswitch As Integer
 
 Public Nt_Season As Integer
 Public t_StSeason As Integer
+Public t_Repr As Integer
+Public PreReprHR As Double
 Public Npulses As Integer
 Public Sens As Double
 Public EffortPulse As Double

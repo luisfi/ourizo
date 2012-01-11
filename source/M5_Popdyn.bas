@@ -80,7 +80,6 @@ ReDim XtraM(Nareas), pLageplusTmp(Nilens)
             NTmp(Area, age) = NTmp(Area, age) * Exp(-(M(Area)))
                 
     End If
-                
                 muTmp(Area, age) = Alpha(Area) + Beta(Area) * muTmp(Area, age)
                 sdTmp(Area, age) = CVmu(Area) * muTmp(Area, age)
                                   

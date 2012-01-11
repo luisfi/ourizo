@@ -36,7 +36,7 @@ Case 1 ' ROTATIONAL ESTO ES ANUAL
            HRTmp(Area) = PulseHR * PulseHRadjust
         
            'Update Atlas for the harvested areas
-           If PartialSurveyFlag = True Then Atlas(Area) = Survey(1, year, Area) * (1 - HRTmp(Area))
+           If PartialSurveyFlag = True Then Atlas(Area) = SurveyBvul(1, year, Area) * (1 - HRTmp(Area))
 
            Catch(year, Area) = BvulTmp(Area) * HRTmp(Area)
         End If
@@ -944,11 +944,11 @@ End Function
 Function getE(pr0, Area)
   
   Dim E As Double
-  Dim N As Double
+  Dim n As Double
   
-    N = getN(pr0, Area)
+    n = getN(pr0, Area)
     
-    E = handling * (BvulTmp(Area) - N) - Log(N / BvulTmp(Area)) / q(Area)
+    E = handling * (BvulTmp(Area) - n) - Log(n / BvulTmp(Area)) / q(Area)
     If E < 0 Then 'Si el esfuerzo es negativo pasa a 0
         E = 0
     End If
@@ -956,12 +956,12 @@ Function getE(pr0, Area)
 End Function
 
 Function getN(pr0, Area)
- Dim N As Double
+ Dim n As Double
  Dim proci As Double
 
     proci = pr0 + cost(Area)
-        N = proci / (price * q(Area) - q(Area) * handling * proci)
-    getN = N
+        n = proci / (price * q(Area) - q(Area) * handling * proci)
+    getN = n
 End Function
 Sub calcAll(pr0, Area, year)
  Dim proci As Double

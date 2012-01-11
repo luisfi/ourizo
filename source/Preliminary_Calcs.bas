@@ -501,7 +501,7 @@ Dim simyear As Integer
                
         Call M4_Calc_Recruits.Deterministic_Recruits(simyear)
             
-        Call M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(simyear, Bmature)
+        Call M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(simyear)
           
         Call M5_Popdyn.PopDyn(simyear)
                         
@@ -522,7 +522,7 @@ Dim simyear As Integer
           'NB these are missing StAge which is OK
           Btotal(StYear, Area) = Btotal(SimEndYear, Area)
           Bvulnerable(StYear, Area) = Bvulnerable(SimEndYear, Area)
-          Bmature(StYear, Area) = Bmature(SimEndYear, Area)
+          'Bmature(StYear, Area) = Bmature(SimEndYear, Area)
                                
           For year = StYear To StYear + Stage - 1
               Settlers(year, Area) = Settlers(SimEndYear - 1, Area)
@@ -575,7 +575,7 @@ Select Case RunFlags.Initial_Conditions
                
         Call M4_Calc_Recruits.Deterministic_Recruits(simyear)
             
-        Call M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(simyear, Bmature)
+        Call M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(simyear)
           
         Call M5_Popdyn.PopDyn(simyear)
                         
@@ -594,7 +594,7 @@ Select Case RunFlags.Initial_Conditions
           n(StYear, Area, Stage) = n(SimEndYear - 1, Area, Stage)  'NB use SimEndYear-1 because after annual update N at Stage is zero
           Btotal(StYear, Area) = Btotal(SimEndYear, Area)
           Bvulnerable(StYear, Area) = Bvulnerable(SimEndYear, Area)
-          Bmature(StYear, Area) = Bmature(SimEndYear, Area)
+          'Bmature(StYear, Area) = Bmature(SimEndYear, Area)
                                
           For year = StYear To StYear + Stage
               Settlers(year, Area) = Settlers(SimEndYear - 1, Area)
