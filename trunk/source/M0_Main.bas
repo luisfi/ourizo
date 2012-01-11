@@ -44,14 +44,14 @@ Case Else   'simulation run
         Call M4_Calc_Recruits.Random_Recruits(year)
             If Nreplicates = 1 Then Call M2_AnnualUpdate.pLgen(year)
         
-        Call M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(year, Bmature)
+        
         
         Call Management_Procedure.Strategies(year)
          
         'Aca entra para la dinamica intraanual, si es solo anual entonces el loop es phony
         For t = 1 To Nt
              
-            If OpenMonth(year, t) = True Then
+            If OpenMonth(year, t) Then
             
                 Call M7_Fishing.Fishing(year, t)
             
@@ -61,6 +61,10 @@ Case Else   'simulation run
                     HRTmp(Area) = 0
                 Next Area
             
+            End If
+            
+            If (t_Repr = t) Then
+                Call M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(year)
             End If
             
             Call M5_Popdyn.PopDyn(year)

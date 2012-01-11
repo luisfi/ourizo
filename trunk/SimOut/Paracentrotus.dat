@@ -32,6 +32,8 @@ Number of Areas	4
 First Year	2010								
 Last Year	2050								
 Number of steps intrayear (Nt)	1								
+Time of reproduction peak during the year (If Anual Then 1)	1								
+Harvest Rate  before time of reproduction	0								
 Start Age	1								
 Age Plus Group	8								
 First Size L1	2								
@@ -105,7 +107,7 @@ Check condition to reopen?	TRUE
  If Reopening Condition									
   Reopening Condition: Fraction of Preharvest Biomass to Reopen / Second Columm: Shorten Period Tolerance	0.5	0.5	0.5	0.5					
   Reopening Condition: Minimum density threshold of vulnerable individuals (above legal size)	0	0	0	0					
-  Reopening Condition: Fraction of Mature Individuals	0.6	0.6	0.6	0.6					
+  Reopening Condition: Fraction of Mature Individuals	0	0	0	0					
   Reopening Condition: Fraction of Individual size greater than (B.%;C.Size)	0.5	0.5	0.5	0.5					
       ReopenAdditionalParameters RC 4: Size	55	55	55	55					
  If Rotacion by Period									

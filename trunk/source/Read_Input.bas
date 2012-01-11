@@ -17,25 +17,27 @@ row_parameters = 30
     StYear = Worksheets("Input").Rows(row_parameters + 2).Columns(2)
     EndYear = Worksheets("Input").Rows(row_parameters + 3).Columns(2)
     Nt = Worksheets("Input").Rows(row_parameters + 4).Columns(2)
-    Stage = Worksheets("Input").Rows(row_parameters + 5).Columns(2)
-    AgePlus = Worksheets("Input").Rows(row_parameters + 6).Columns(2)
-    L1 = Worksheets("Input").Rows(row_parameters + 7).Columns(2)
-    Linc = Worksheets("Input").Rows(row_parameters + 8).Columns(2)
-    Nilens = Worksheets("Input").Rows(row_parameters + 9).Columns(2)
+    t_Repr = Worksheets("Input").Rows(row_parameters + 5).Columns(2)
+    PreReprHR = Worksheets("Input").Rows(row_parameters + 6).Columns(2)
+    Stage = Worksheets("Input").Rows(row_parameters + 7).Columns(2)
+    AgePlus = Worksheets("Input").Rows(row_parameters + 8).Columns(2)
+    L1 = Worksheets("Input").Rows(row_parameters + 9).Columns(2)
+    Linc = Worksheets("Input").Rows(row_parameters + 10).Columns(2)
+    Nilens = Worksheets("Input").Rows(row_parameters + 11).Columns(2)
     Nyears = EndYear - StYear + 1
 
-row_area_atributes = 41
-row_Population_Dynamics = 46
-row_global_parameters = 54
-row_parameters_biol_region = 60
-row_parameters_area = 72
-row_initial_conditions = 80
+row_area_atributes = 43
+row_Population_Dynamics = 48
+row_global_parameters = 56
+row_parameters_biol_region = 62
+row_parameters_area = 74
+row_initial_conditions = 82
 
-row_management_control = 87
+row_management_control = 89
 row_reopening_conditions = row_management_control + 18
 row_rotation_by_period = row_reopening_conditions + 6
 
-row_connectivity = 142
+row_connectivity = 144
 row_catch_specification = row_connectivity + Nareas + 3
 row_effort_specification = row_catch_specification + Nyears + 3
 

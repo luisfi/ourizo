@@ -1,0 +1,49 @@
+====REVISIÓN 3.0: CHANGE-LOG====
+
+"Cambios para permitir que la temporada que la producción de larvas se produzca antes, durante o después de la temporada de pesca. Ver log detallado en ~/doc/changelog/Rev3.0.googlecode.txt"
+
+- Añadidas variables t_Repr(Integer) periodo en el que se produce el pico de reproducción y PreReprHR(Double) fracción de la HR que se pesca antes de la reproducción. 
+
+- Modificado M0_Main para que se llame a M6_Prod_Alloc_Larvae entre la llamada a M7_Fishing y M5_PopDyn, dentro del mes o periodo intra-anual (t_Repr(Integer)) que corresponda (sólo puede ser llamado una vez al año). 
+
+- En M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(year, SB) el argumento SB, al que normalmente se le pasa Bmature se  puso como argumento opcional. Cuando no se le pasa nada, se calcula la Bmature global, cuando se le pasa algún argumento se calcula el aporte de larvas con el valor de ese argumento que se le pasa. 
+
+- Ahora M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(year, Optional SB) calcula la Bmature si no se le pasa el argumento opcional(Quitándole la HR que le corresponda):
+
+For Area = 1 To Nareas
+        Bmature(year, Area) = 0
+        
+        For age = Stage + 1 To AgePlus
+            Bmature(year, Area) = Bmature(year, Area) + n(year, Area, age) * (1-HRTemp(Area)*PreReprHR)* w(year, Area, age) * FracMat(age)
+        Next age
+
+        SB = Bmature
+   Next Area
+
+
+
+====NOTAS====
+
+ESQUEMA ORIGINAL (MAIN):
+
+M6_Prod_Alloc_Larvae
+Loop intraanual
+M7_Fishing
+M5_PopDyn
+Fin Loop
+Annual_update
+
+
+**NUEVO ESQUEMA DE IMPLEMENTACION:**
+
+Loop intraanual
+	M7_Fishing
+
+	IF (Si el momento de la temporada en la que se realiza es el adecuado)
+		M6_Prod_Alloc_Larvae (Aquí se calculan los Bmaduros, quitándoles la HR que les correspondería para el momento de la reproducción)
+	Fin IF
+
+	M5_PopDyn
+Fin Loop
+
+M_Annual_update

@@ -25,7 +25,8 @@ For i_survey = 1 To Nsurveys
                 una fraccion es surveyed each year con el supuesto que las otras areas presurveyed no cambian entre surveys excepto por pesca)
                 iz = iz + 1
                 SurveyBvul(i_survey, year, Area) = Bvulnerable(year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
-                SurveyMat(i_survey, year, Area) = Bmature(year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
+                ' Aqui aun no esta calculada Bmature(year, Area), así que la comentamos:
+                ' SurveyMat(i_survey, year, Area) = Bmature(year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
                 SurveyNtot(i_survey, year, Area) = 0
                 For age = 1 To Nages
                     SurveyNtot(i_survey, year, Area) = SurveyNtot(i_survey, year, Area) + n(year, Area, age)

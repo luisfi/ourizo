@@ -1,0 +1,14 @@
+====REVISIÓN 2.0: CHANGE-LOG====
+
+- Se creo Dosurvey() como proceso por Area, de forma que se pueda utilizar la función tanto para surveys parciales como para completas. 
+En la parte de la Survey
+  - Creado proceso de cálculo de proporciones de talla para el muestreo dentro de DoSurvey() pero como proceso independiente.  
+  - Eliminar las opciones de numéros/biomasa
+  - Añadido un pLopt booleano (pL opcional?) para ver si se calcula en la survey la estructura de tallas de la población.
+
+- Generada la función rmultinom() en M8_Library, que te genera un vector de con la proporcion de números aleatorios que siguen una distribución multinomial.  (Documentación como la función del mismo nombre en R, pero te saca las proporciones que te saldrían de cada clase en vez de el vector en sí)
+
+- Se Cambió diseño del INPUT, separando los parámetros disponibles para las distintas opciones.
+- Creado proceso independiente de verificación de condiciones de apertura, para poder utilizarlo desde las distintas opciones de rotación: CheckOpenConditions(Area)
+ - Las tolerancias tienen que estar después de los periodos y de decir que hay periodos adaptativos.
+ - Cambio del DensityThreshold a Densidad por encima de la talla legal.
