@@ -30,7 +30,7 @@ Public Ndias_beforeswitch As Integer
 Public Nt_Season As Integer
 Public t_StSeason As Integer
 Public t_Repr As Integer
-Public PreReprHR As Double
+Public FracHRPreRepr As Double
 Public Npulses As Integer
 Public Sens As Double
 Public EffortPulse As Double
@@ -77,7 +77,7 @@ Public OpenMonth() As Boolean
 Public Bregion() As Integer
 
 'Varies accros Year, Age and Area
-Public n() As Double, mu() As Double, sd() As Double
+Public N() As Double, mu() As Double, sd() As Double
 
 'Varies accros years and areas
 Public Bvulnerable() As Double
@@ -138,15 +138,17 @@ Public CatchAdjust() As Double
 
 
 
-'Declare virgin condition variables
-Public R0() As Double, SBR0() As Double, BR0() As Double, VB0() As Double, Alpha0() As Double, Beta0() As Double
+'Declare carrying capacity and virgin condition (unharvested equilibrium) variables
+Public R0() As Double, SBR0() As Double, BR0() As Double, SB0() As Double, VB0() As Double, Alpha0() As Double, Beta0() As Double
+Public SBvirgin() As Double, VBvirgin() As Double
+Public VB0_all As Double, SB0_all As Double, VBvirgin_all As Double, SBvirgin_all As Double
+
 Public Linf() As Double, aW() As Double, bW() As Double, _
         k() As Double, M() As Double, t0() As Double, _
         Alpha() As Double, _
         Beta() As Double, Rho() As Double, _
-        Kcarga() As Double, Bthreshold() As Double, Btotal_start() As Double, _
-        Rmax() As Double, g() As Double, gk() As Double, Bg0() As Double, _
-        VB0_all As Double, SB0_all As Double, Kcarga_adults() As Double
+        Kcarga() As Double, Kcarga_adults() As Double, Bthreshold() As Double, Btotal_start() As Double, _
+        Rmax() As Double, g() As Double, gk() As Double, Bg0() As Double
 
 'Temp variables for intrayear dynamics
 Public BvulTmp() As Double, NTmp() As Double, BtotTmp() As Double, muTmp() As Double, sdTmp() As Double, WTmp() As Double, _

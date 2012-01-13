@@ -5,30 +5,28 @@ Sub Prod_Alloc_Larvae(year, Optional SB)
 'Calcula biomasa desovante, produce larvas y las reparte
 'puede ser relacion simplemente lineal
 '
- If IsMissing(SB) Then 'función IsMissing() retorna el valor True si NO se ha enviado el parámetro que queremos comprobar
-   For Area = 1 To Nareas
+  If IsMissing(SB) Then 'función IsMissing() retorna el valor True si NO se ha enviado el parámetro que queremos comprobar
+    For Area = 1 To Nareas
         Bmature(year, Area) = 0
-        For age = Stage + 1 To AgePlus
-            Bmature(year, Area) = Bmature(year, Area) + n(year, Area, age) * (1 - HRTmp(Area) * PreReprHR) * w(year, Area, age) * FracMat(age)
+        For age = Stage To AgePlus
+            Bmature(year, Area) = Bmature(year, Area) + NTmp(Area, age) * (1 - HRTmp(Area) * FracSel(Area, age) * FracHRPreRepr) * WTmp(Area, age) * FracMat(age)
         Next age
-   Next Area
-   'Dim SB() As Double
-   'ReDim SB(Nyears, Nareas)
-   SB = Bmature
-End If
+    Next Area
+    SB = Bmature
+  End If
    
-   For Area = 1 To Nareas
+  For Area = 1 To Nareas
        Larvae(year, Area) = SB(year, Area) * ProdXB
-   Next Area
+  Next Area
    
-   For Area = 1 To Nareas
+  For Area = 1 To Nareas
     
        Settlers(year + Stage, Area) = 0
     
        For i = 1 To Nareas
            Settlers(year + Stage, Area) = Settlers(year + Stage, Area) + Connect(Area, i) * Larvae(year, i)
        Next i
-   Next Area
+  Next Area
 
 End Sub
 

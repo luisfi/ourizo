@@ -1,0 +1,29 @@
+=== Metapesca: Revisión 4.0===
+
+ **Objetivo General**
+
+REVISION 4: Limpiar el codigo de Preliminary_Calcs, y mirar como calcula la SB0 y las biomasas en el procedimiento de Set_Carrying_Capacity.
+
+==== CHANGES====
+
+svn add doc/changelog/
+
+svn commit -m "REVISION 4: Limpiar el código de Preliminary_Calcs, y mirar como calcula la SB0 y las biomasas en el procedimiento de Set_Carrying_Capacity."
+
+
+====CHANGE-LOG====
+
+-  Se añadieron variables globales:
+SBvirgin(Nareas) Biomasa de desovantes en condiciones de equilibrio sin pesca.
+VBvirgin(Nareas) Biomasa vulnerable en condiciones de equilibrio sin pesca. 
+SBvirgin_all Biomasa de desovantes en condiciones de equilibrio sin pesca.
+VBvirgin_all Biomasa vulnerable en condiciones de equilibrio sin pesca. 
+SB0(Nareas) Biomasa de desovantes en condiciones de capacidad de carga en cada área sin pesca.
+VB0(Nareas) Biomasa vulnerable en condiciones de capacidad de carga en cada área sin pesca. 
+
+- Se cambio  nombre PreReprHR a FracHRPreRepr
+
+- En Initialize_tmp_variables: ln. 634 Se inicializa ya WTmp, que se llama en el Alloc_Larvae 
+- En Preliminary_Calcs: Initialize_variables: Eliminamos las Btot; Bvulne
+
+

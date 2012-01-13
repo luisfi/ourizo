@@ -70,7 +70,7 @@ Attribute FitData.VB_ProcData.VB_Invoke_Func = " \n14"
         
         Nvulnerable = 0
         For age = 1 To AgePlus
-            Nvulnerable = Nvulnerable + n(year, Area, age) * FracSel(Area, age)
+            Nvulnerable = Nvulnerable + N(year, Area, age) * FracSel(Area, age)
         Next age
         ResAbundance(i) = Log(ObsAbundance(i, 3)) - Log(Nvulnerable / Surface(Area))
       Next i
@@ -152,7 +152,7 @@ If RunFlags.InputAbundance = True Then
         For Area = 1 To Nareas
             Nvulnerable = 0
             For age = 1 To AgePlus
-                Nvulnerable = Nvulnerable + n(StYear - 1 + year, Area, age) * FracSel(Area, age)
+                Nvulnerable = Nvulnerable + N(StYear - 1 + year, Area, age) * FracSel(Area, age)
             Next age
             Worksheets("OutTuning").Rows(year + 1 + (Nyears) * (Area - 1)).Columns(8) = Nvulnerable / Surface(Area)
         Next Area

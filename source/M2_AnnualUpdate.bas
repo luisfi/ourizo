@@ -15,7 +15,7 @@ For Area = 1 To Nareas
             ''''''''''''''''''''''' PROGRESSION DE COHORTES
      For age = Stage To AgePlus - 1
   '' Debug.Print muTmp(Area, age)
-            n(year + 1, Area, age + 1) = NTmp(Area, age)
+            N(year + 1, Area, age + 1) = NTmp(Area, age)
             mu(year + 1, Area, age + 1) = muTmp(Area, age)
             sd(year + 1, Area, age + 1) = sdTmp(Area, age)
             w(year + 1, Area, age + 1) = WTmp(Area, age)
@@ -44,14 +44,14 @@ For Area = 1 To Nareas
             Next ilen
             FracSel(Area, Stage) = FracSelStAge(Area)
                     
-        TEMP = n(year + 1, Area, AgePlus) + NTmp(Area, AgePlus)
+        TEMP = N(year + 1, Area, AgePlus) + NTmp(Area, AgePlus)
         'mu(year + 1, area, AgePlus) = (mu(year + 1, area, AgePlus) * N(year + 1, area, AgePlus) + muTmp(area, AgePlus) * NTmp(area, AgePlus)) / TEMP
         
         For ilen = 1 To Nilens
-            pLageplus(Area, ilen) = (pLage(Area, AgePlus, ilen) * n(year + 1, Area, AgePlus) + pLageplus(Area, ilen) * NTmp(Area, AgePlus)) / TEMP
+            pLageplus(Area, ilen) = (pLage(Area, AgePlus, ilen) * N(year + 1, Area, AgePlus) + pLageplus(Area, ilen) * NTmp(Area, AgePlus)) / TEMP
         Next ilen
         
-        n(year + 1, Area, AgePlus) = TEMP
+        N(year + 1, Area, AgePlus) = TEMP
           
    'rewrite mu,  W and FracSel for Ageplus with new size comp
             FracSel(Area, AgePlus) = 0
@@ -67,17 +67,16 @@ For Area = 1 To Nareas
             Next ilen
    
         For age = Stage To AgePlus
-            NTmp(Area, age) = n(year + 1, Area, age)
+            NTmp(Area, age) = N(year + 1, Area, age)
             muTmp(Area, age) = mu(year + 1, Area, age)
             sdTmp(Area, age) = sd(year + 1, Area, age)
         Next age
     
    'compute biomasses excluding StAge (will be added later in calc_Rec in next year loop)
-        'Bmature(year + 1, Area) = 0
+
         Btotal(year + 1, Area) = 0
         For age = Stage + 1 To AgePlus
-            'Bmature(year + 1, Area) = Bmature(year + 1, Area) + n(year + 1, Area, age) * w(year + 1, Area, age) * FracMat(age)
-            Btotal(year + 1, Area) = Btotal(year + 1, Area) + n(year + 1, Area, age) * w(year + 1, Area, age)
+            Btotal(year + 1, Area) = Btotal(year + 1, Area) + N(year + 1, Area, age) * w(year + 1, Area, age)
         Next age
        
 Next Area
