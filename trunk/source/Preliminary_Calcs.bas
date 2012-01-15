@@ -20,11 +20,12 @@ Attribute Initialize_variables.VB_ProcData.VB_Invoke_Func = " \n14"
 
 ReDim Btotal(StYear - Stage + 1 To SimEndYear + 1, Nareas)
 ReDim Bmature(StYear - Stage To SimEndYear + 1, Nareas)
-ReDim SurveyBvul(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
 ReDim SurveyAll(StYear - Stage + 1 To SimEndYear + 1)
+ReDim SurveyBtot(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
+ReDim SurveyBvul(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
+ReDim SurveyMat(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
 ReDim SurveyNage(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas, Nages)
 ReDim SurveyNtot(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
-ReDim SurveyMat(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
 ReDim SurveypL(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas, Nilens)
 ReDim Bvulnerable(StYear - Stage + 1 To SimEndYear + 1, Nareas)
 ReDim N(StYear To SimEndYear + 1, Nareas, Stage To AgePlus)
@@ -170,7 +171,7 @@ For rr = 1 To Nregions
 Next rr
 
 
-If RestingTimeFlag = True Then
+If RunFlags.Hstrategy = 1 Then ' If rotational strategy
     'copy the open areas and resting times in sheet Calcs
             For i_area = 1 To Nopenareas
                 Worksheets("Calcs").Rows(i_area).Columns(1) = IDopenarea(i_area)
