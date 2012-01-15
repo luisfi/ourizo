@@ -34,7 +34,7 @@ row_parameters_area = 74
 row_initial_conditions = 82
 
 row_management_control = 89
-row_reopening_conditions = row_management_control + 18
+row_reopening_conditions = row_management_control + 19
 row_rotation_by_period = row_reopening_conditions + 6
 
 row_connectivity = 144
@@ -158,7 +158,7 @@ TargetHR = Worksheets("Input").Rows(row_management_control + 10).Columns(2)
 
 Nt_Season = Worksheets("Input").Rows(row_management_control + 11).Columns(2)
 t_StSeason = Worksheets("Input").Rows(row_management_control + 12).Columns(2)
-Nsurveys = Worksheets("Input").Rows(22 + row_reopening_conditions).Columns(2)
+Nsurveys = Worksheets("Input").Rows(21 + row_reopening_conditions).Columns(2)
 
 
 If (Nt_Season > Nt) Or (t_StSeason > Nt) Then
@@ -194,7 +194,7 @@ Case 1  'Rotation
     
     PulseHR = Worksheets("Input").Rows(row_management_control + 16).Columns(2)
     
-    ReOpenConditionFlag = Worksheets("Input").Rows(row_management_control + 17).Columns(2)
+    ReOpenConditionFlag = Worksheets("Input").Rows(row_management_control + 18).Columns(2)
     
     'Reopen Conditions
     NOpenConditions = 4
@@ -203,20 +203,20 @@ Case 1  'Rotation
     ReDim ShortenTolerance(Nareas)
     ReDim ReOpenConditionValues(Nareas, NOpenConditions)
     
+    ReDim RCVirginBiomass_Fraction(Nareas)
+    ReDim RCVirginBiomass_Tolerance(Nareas)
     ReDim RCPreharvestBiomass_Fraction(Nareas)
     ReDim RCPreharvestBiomass_Tolerance(Nareas)
     ReDim RCMinimumDensity(Nareas)
     ReDim RCMinimumDensity_Tolerance(Nareas)
-    ReDim RCMatures_Fraction(Nareas)
-    ReDim RCMatures_Tolerance(Nareas)
     ReDim RCGreaterSize_Fraction(Nareas)
     ReDim RCGreaterSize_Size(Nareas)
     ReDim RCGreaterSize_Tolerance(Nareas)
     
     For i = 1 To Nareas
-        RCPreharvestBiomass_Fraction(i) = Worksheets("Input").Rows(row_reopening_conditions + 1).Columns(i + 1)
-        RCMinimumDensity(i) = Worksheets("Input").Rows(row_reopening_conditions + 2).Columns(i + 1)
-        RCMatures_Fraction(i) = Worksheets("Input").Rows(row_reopening_conditions + 3).Columns(i + 1)
+        RCVirginBiomass_Fraction(i) = Worksheets("Input").Rows(row_reopening_conditions + 1).Columns(i + 1)
+        RCPreharvestBiomass_Fraction(i) = Worksheets("Input").Rows(row_reopening_conditions + 2).Columns(i + 1)
+        RCMinimumDensity(i) = Worksheets("Input").Rows(row_reopening_conditions + 3).Columns(i + 1)
         RCGreaterSize_Fraction(i) = Worksheets("Input").Rows(row_reopening_conditions + 4).Columns(i + 1)
         RCGreaterSize_Size(i) = Worksheets("Input").Rows(row_reopening_conditions + 5).Columns(i + 1)
     Next i
@@ -225,22 +225,22 @@ Case 1  'Rotation
     RestingTimeFlag = Worksheets("Input").Rows(row_rotation_by_period + 1).Columns(2)
     
     
-    If (RestingTimeFlag = True) Or (RunFlags.RotationType = 4) Then 'If areas to be ordered by restingtime or if rotation by period
+    If RunFlags.Hstrategy = 1 Then 'If Rotational Strategy.
         ReDim RestingTime(Nareas)
         ReDim RotationPeriod(Nareas)
         For Area = 1 To Nareas
-            RestingTime(Area) = Worksheets("Input").Rows(row_rotation_by_period + 2).Columns(1 + Area)
-            RotationPeriod(Area) = Worksheets("Input").Rows(row_rotation_by_period + 3).Columns(1 + Area)
+            RestingTime(Area) = Worksheets("Input").Rows(row_management_control + 17).Columns(1 + Area)
+            RotationPeriod(Area) = Worksheets("Input").Rows(row_rotation_by_period + 2).Columns(1 + Area)
         Next Area
     End If
     
-    AdaptativeRotationFlag = Worksheets("Input").Rows(row_rotation_by_period + 4).Columns(2)
+    AdaptativeRotationFlag = Worksheets("Input").Rows(row_rotation_by_period + 3).Columns(2)
     
     For i = 1 To Nareas
+        RCVirginBiomass_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 4).Columns(i + 1)
         RCPreharvestBiomass_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 5).Columns(i + 1)
         RCMinimumDensity_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 6).Columns(i + 1)
-        RCMatures_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 7).Columns(i + 1)
-        RCGreaterSize_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 8).Columns(i + 1)
+        RCGreaterSize_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 7).Columns(i + 1)
     Next i
     
 Case 2  'By Area
@@ -283,13 +283,13 @@ Case 3  'By region
     
     'Here subcase IFD or GRAVITATIONAL
     
-    EffortDistributionFlag = Worksheets("Input").Rows(row_management_control + 23 + row_reopening_conditions).Columns(2)
+    EffortDistributionFlag = Worksheets("Input").Rows(row_reopening_conditions + 15).Columns(2)
         
     Select Case EffortDistributionFlag
     
     Case 1  'obsolete IFD
-        Sens = Worksheets("Input").Rows(row_management_control + 24 + row_reopening_conditions).Columns(2)
-        Ndias_beforeswitch = Worksheets("Input").Rows(row_management_control + 25 + row_reopening_conditions).Columns(2)
+        Sens = Worksheets("Input").Rows(row_reopening_conditions + 16).Columns(2)
+        Ndias_beforeswitch = Worksheets("Input").Rows(row_reopening_conditions + 17).Columns(2)
         Npulses = 365 \ (Nt * Ndias_beforeswitch) 'integer division
     
     Case 2

@@ -1,0 +1,16 @@
+=== Metapesca: Revisión 6.0 ===
+
+ **Objetivo General**
+
+Depuracion general de ejecuciones con distintas opciones de Inputs. Cambios y mejoras en Management_Procedures. Se generaliza la utilizacion de DoSurvey() y de CheckOpeningConditions(). 
+
+====CHANGE-LOG====
+
+- Cambios en Management_Procedures: Para el resto de los Cases (no solo el 4. Rotacion by period), se incluyeron llamados a DoSurvey() y a CheckReopenConditions(). 
+
+- En las reopen conditions: Se llama a VBvirgin en vez de a VB0 para ver si se recupero la biomasa virgen. 
+
+- Se cambiaron las reopening conditions. Se añadio recuperacion respecto a la biomasa antes de la ultima extraccion, y se eliminó la de la fraccion de maduros.
+
+- Se modifico el procedimiento rmultinom de M8_Library para que no se rompa cuando la N que le pasan es cero. 
+

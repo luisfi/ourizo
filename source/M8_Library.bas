@@ -360,7 +360,7 @@ Attribute Multiplyv2.VB_ProcData.VB_Invoke_Func = " \n14"
         
 End Function
 
-Public Function rmultinom(n As Integer, size() As Double, prob() As Double) As Variant
+Public Function rmultinom(N As Integer, size() As Double, prob() As Double) As Variant
 ' Generate multinomially distributed random number vectors
 
     'Check dimensions
@@ -389,7 +389,8 @@ Public Function rmultinom(n As Integer, size() As Double, prob() As Double) As V
         'Igual aquí habría que ponerle un comprobante para ver si probacum ==1
     
     'Check correspondence between random numbers and multinomial intervals
-    For i = 1 To n
+  
+      For i = 1 To N
     
         randomvector = Rnd() 'Random numbers uniformly distributed from 0 to 1
         
@@ -399,12 +400,17 @@ Public Function rmultinom(n As Integer, size() As Double, prob() As Double) As V
                 Exit For 'Sale del loop una vez que encuentra que el valor esta dentro de uno de los intervalos
             End If
         Next j
-    Next i
-    
-    'Convert to proportions
-    For j = 1 To multiLength
-        vmultinom(j) = vmultinom(j) / n
-    Next j
+      Next i
+      If N > 0 Then 'If N is greater than 0
+      'Convert to proportions
+      For j = 1 To multiLength
+        vmultinom(j) = vmultinom(j) / N
+      Next j
+      Else ' If it is 0
+        For j = 1 To multiLength
+          vmultinom(j) = 0
+        Next j
+      End If
     
     'Return
      rmultinom = vmultinom ' Returns vmultinom

@@ -43,12 +43,12 @@ Public TargetHR As Double
 Public PulseHR As Double
 Public PulseHRadjust As Double
 Public TargetSurface As Double
+Public RCVirginBiomass_Fraction() As Double
+Public RCVirginBiomass_Tolerance() As Double
 Public RCPreharvestBiomass_Fraction() As Double
 Public RCPreharvestBiomass_Tolerance() As Double
 Public RCMinimumDensity() As Double
 Public RCMinimumDensity_Tolerance() As Double
-Public RCMatures_Fraction() As Double
-Public RCMatures_Tolerance() As Double
 Public RCGreaterSize_Fraction() As Double
 Public RCGreaterSize_Size() As Double
 Public RCGreaterSize_Tolerance() As Double
@@ -86,11 +86,12 @@ Public effort() As Double
 Public Larvae() As Double
 Public Bmature() As Double
 Public Btotal() As Double
-Public SurveyBvul() As Double
 Public SurveyAll() As Double
+Public SurveyBtot() As Double
+Public SurveyBvul() As Double
+Public SurveyMat() As Double
 Public SurveyNage() As Double
 Public SurveyNtot() As Double
-Public SurveyMat() As Double
 Public SurveypL() As Double
 
 
