@@ -57,9 +57,9 @@ Case Else   'simulation run
             
             Else
             
-                For Area = 1 To Nareas
-                    HRTmp(Area) = 0
-                Next Area
+                For area = 1 To Nareas
+                    HRTmp(area) = 0
+                Next area
             
             End If
             
