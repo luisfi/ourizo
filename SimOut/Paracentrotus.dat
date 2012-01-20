@@ -51,7 +51,7 @@ Recruitment CV	0.6
 Recruitment Temporal Correlation	0								
 Spatial? Leer una matriz?									
 Type of Growth (1: density-ind; 2:denso-dep)	2								
-Method to calculate size composition of plus group (1: age-based; 2: size-based) 	1								
+Method to calculate size composition of plus group (1: age-based; 2: size-based) 	2								
 									
 Global Parameters									
 Age of 100% Mature	3								
@@ -80,7 +80,7 @@ Frac. reduccion de crecimiento en Kcarga (gk)	0.99	0.99	0.99	0.99
 Biomasa inicio densdep % K	0.6	0.6	0.6	0.6					
 									
 Initial Conditions									
-"Start at: (1) Kcarga (2) Virgin, (3) HR, (4) Input File"	3								
+"Start at: (1) Kcarga (2) Virgin, (3) HR, (4) Input File"	2								
 Initial Harvest Rate	0.03	0.03	0.03	0.03					
 Initial conditions CV	0.5								
 Leer conectividad aparte- abajo									
@@ -128,7 +128,7 @@ If by Region:
 If Feedback (Closed-Loop)									
 Number of Surveys used in MP rule (Implemented 1)	1								
 Survey 1									
-pLopt (size structure?)	TRUE								
+Sample Size for pL estimation in survey	500								
 Survey q	1								
 Survey CV	0.1								
 	1								

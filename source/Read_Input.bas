@@ -64,11 +64,11 @@ N_Zvector = 100000
 
 ReDim Zvector(N_Zvector)
 
-    For Area = 1 To Nareas
-        Surface(Area) = Worksheets("Input").Rows(row_area_atributes + 2).Columns(1 + Area)
-        Lat(Area) = Worksheets("Input").Rows(row_area_atributes + 3).Columns(1 + Area)
-        Lon(Area) = Worksheets("Input").Rows(row_area_atributes + 4).Columns(1 + Area)
-    Next Area
+    For area = 1 To Nareas
+        Surface(area) = Worksheets("Input").Rows(row_area_atributes + 2).Columns(1 + area)
+        Lat(area) = Worksheets("Input").Rows(row_area_atributes + 3).Columns(1 + area)
+        Lon(area) = Worksheets("Input").Rows(row_area_atributes + 4).Columns(1 + area)
+    Next area
 
     RunFlags.Rec = Worksheets("Input").Rows(row_Population_Dynamics + 1).Columns(2)
     RunFlags.Growth_type = Worksheets("Input").Rows(row_Population_Dynamics + 5).Columns(2)
@@ -83,45 +83,45 @@ ReDim Zvector(N_Zvector)
     price = Worksheets("Input").Rows(row_global_parameters + 4).Columns(2)
         
     NBregions = Worksheets("Input").Rows(row_parameters_biol_region + 1).Columns(2)
-    For Area = 1 To Nareas
-        Bregion(Area) = Worksheets("Input").Rows(row_parameters_biol_region + 3).Columns(Area + 1)
+    For area = 1 To Nareas
+        Bregion(area) = Worksheets("Input").Rows(row_parameters_biol_region + 3).Columns(area + 1)
       
-        Linf(Area) = Worksheets("Input").Rows(row_parameters_biol_region + 4).Columns(Bregion(Area) + 1)
-        k(Area) = Worksheets("Input").Rows(row_parameters_biol_region + 5).Columns(Bregion(Area) + 1)
-        t0(Area) = Worksheets("Input").Rows(row_parameters_biol_region + 6).Columns(Bregion(Area) + 1)
-        CVmu(Area) = Worksheets("Input").Rows(row_parameters_biol_region + 7).Columns(Bregion(Area) + 1)
-        aW(Area) = Worksheets("Input").Rows(row_parameters_biol_region + 8).Columns(Bregion(Area) + 1)
-        bW(Area) = Worksheets("Input").Rows(row_parameters_biol_region + 9).Columns(Bregion(Area) + 1)
-        M(Area) = Worksheets("Input").Rows(row_parameters_biol_region + 10).Columns(Bregion(Area) + 1)
-    Next Area
+        Linf(area) = Worksheets("Input").Rows(row_parameters_biol_region + 4).Columns(Bregion(area) + 1)
+        k(area) = Worksheets("Input").Rows(row_parameters_biol_region + 5).Columns(Bregion(area) + 1)
+        t0(area) = Worksheets("Input").Rows(row_parameters_biol_region + 6).Columns(Bregion(area) + 1)
+        CVmu(area) = Worksheets("Input").Rows(row_parameters_biol_region + 7).Columns(Bregion(area) + 1)
+        aW(area) = Worksheets("Input").Rows(row_parameters_biol_region + 8).Columns(Bregion(area) + 1)
+        bW(area) = Worksheets("Input").Rows(row_parameters_biol_region + 9).Columns(Bregion(area) + 1)
+        M(area) = Worksheets("Input").Rows(row_parameters_biol_region + 10).Columns(Bregion(area) + 1)
+    Next area
 
-    For Area = 1 To Nareas
-        Kcarga(Area) = Worksheets("Input").Rows(row_parameters_area + 1).Columns(Area + 1)
-          Kcarga(Area) = Kcarga(Area) * Surface(Area)
-        Rmax(Area) = Worksheets("Input").Rows(row_parameters_area + 2).Columns(Area + 1)
-          Rmax(Area) = Rmax(Area) * Surface(Area)
-        q(Area) = Worksheets("Input").Rows(row_parameters_area + 3).Columns(Area + 1)
-        cost(Area) = Worksheets("Input").Rows(row_parameters_area + 4).Columns(Area + 1)
+    For area = 1 To Nareas
+        Kcarga(area) = Worksheets("Input").Rows(row_parameters_area + 1).Columns(area + 1)
+          Kcarga(area) = Kcarga(area) * Surface(area)
+        Rmax(area) = Worksheets("Input").Rows(row_parameters_area + 2).Columns(area + 1)
+          Rmax(area) = Rmax(area) * Surface(area)
+        q(area) = Worksheets("Input").Rows(row_parameters_area + 3).Columns(area + 1)
+        cost(area) = Worksheets("Input").Rows(row_parameters_area + 4).Columns(area + 1)
         If RunFlags.Growth_type = 1 Then
-            gk(Area) = 1
+            gk(area) = 1
         Else
-            gk(Area) = Worksheets("Input").Rows(row_parameters_area + 5).Columns(Area + 1)
-            Bthreshold(Area) = Worksheets("Input").Rows(row_parameters_area + 6).Columns(Area + 1)
-            Bthreshold(Area) = Bthreshold(Area) * Kcarga(Area)
+            gk(area) = Worksheets("Input").Rows(row_parameters_area + 5).Columns(area + 1)
+            Bthreshold(area) = Worksheets("Input").Rows(row_parameters_area + 6).Columns(area + 1)
+            Bthreshold(area) = Bthreshold(area) * Kcarga(area)
         End If
     
-    Next Area
+    Next area
 
     RunFlags.Initial_Conditions = Worksheets("Input").Rows(row_initial_conditions + 1).Columns(2)
-    For Area = 1 To Nareas
-        HR_start(Area) = Worksheets("Input").Rows(row_initial_conditions + 2).Columns(Area + 1)
-    Next Area
+    For area = 1 To Nareas
+        HR_start(area) = Worksheets("Input").Rows(row_initial_conditions + 2).Columns(area + 1)
+    Next area
 
-    For Area = 1 To Nareas
+    For area = 1 To Nareas
         For i = 1 To Nareas
-            Connect(Area, i) = Worksheets("Input").Rows(row_connectivity + Area + 1).Columns(1 + i)
+            Connect(area, i) = Worksheets("Input").Rows(row_connectivity + area + 1).Columns(1 + i)
         Next i
-    Next Area
+    Next area
               
 '''HERE STARTS MANAGEMENT INPUT
 
@@ -141,12 +141,12 @@ Nregions = Worksheets("Input").Rows(row_management_control + 1).Columns(2)
     ReDim Lfull(Nareas)
     ReDim iLfull(Nareas)
 
-For Area = 1 To Nareas
-    Region(Area) = Worksheets("Input").Rows(row_management_control + 3).Columns(Area + 1)
-    ClosedArea(StYear, Area) = Worksheets("Input").Rows(row_management_control + 4).Columns(1 + Area)
-    Lfull(Area) = Worksheets("Input").Rows(row_management_control + 5).Columns(1 + Area)
-    iLfull(Area) = ((Lfull(Area) - L1) / Linc) + 1
-Next Area
+For area = 1 To Nareas
+    Region(area) = Worksheets("Input").Rows(row_management_control + 3).Columns(area + 1)
+    ClosedArea(StYear, area) = Worksheets("Input").Rows(row_management_control + 4).Columns(1 + area)
+    Lfull(area) = Worksheets("Input").Rows(row_management_control + 5).Columns(1 + area)
+    iLfull(area) = ((Lfull(area) - L1) / Linc) + 1
+Next area
 
 
 RunFlags.Hstrategy = Worksheets("Input").Rows(row_management_control + 6).Columns(2)
@@ -179,22 +179,29 @@ Case 1  'Rotation
     
     For i = StYear To EndYear
         TAC(i) = Worksheets("Input").Rows(row_catch_specification + 2 + (i - StYear)).Columns(2)
-        For Area = 1 To Nareas
-            TAC_area(i, Area) = Worksheets("Input").Rows(row_catch_specification + 2 + (i - StYear)).Columns(2 + Nregions + Area)
-        Next Area
+        For area = 1 To Nareas
+            TAC_area(i, area) = Worksheets("Input").Rows(row_catch_specification + 2 + (i - StYear)).Columns(2 + Nregions + area)
+        Next area
     Next i
         
     PartialSurveyFlag = Worksheets("Input").Rows(row_management_control + 15).Columns(2)
     
     'if there is no feedback you can't have a partial survey
     If (Feedback = False And PartialSurveyFlag = True) Then
-      PartialSurveyFlag = False
       MsgBox ("Inconsistent flags: setting PartialSurveyFlag to False")
+      PartialSurveyFlag = False
+      Worksheets("Input").Rows(row_management_control + 15).Columns(2) = False
     End If
     
     PulseHR = Worksheets("Input").Rows(row_management_control + 16).Columns(2)
     
     ReOpenConditionFlag = Worksheets("Input").Rows(row_management_control + 18).Columns(2)
+    'if there is no feedback you can't check ReOpenConditions
+    If (Feedback = False And ReOpenConditionFlag = True) Then
+      MsgBox ("Inconsistent flags: setting ReOpenConditionFlag to False")
+      ReOpenConditionFlag = False
+      Worksheets("Input").Rows(row_management_control + 18).Columns(2) = False
+    End If
     
     'Reopen Conditions
     NOpenConditions = 4
@@ -228,13 +235,20 @@ Case 1  'Rotation
     If RunFlags.Hstrategy = 1 Then 'If Rotational Strategy.
         ReDim RestingTime(Nareas)
         ReDim RotationPeriod(Nareas)
-        For Area = 1 To Nareas
-            RestingTime(Area) = Worksheets("Input").Rows(row_management_control + 17).Columns(1 + Area)
-            RotationPeriod(Area) = Worksheets("Input").Rows(row_rotation_by_period + 2).Columns(1 + Area)
-        Next Area
+        For area = 1 To Nareas
+            RestingTime(area) = Worksheets("Input").Rows(row_management_control + 17).Columns(1 + area)
+            RotationPeriod(area) = Worksheets("Input").Rows(row_rotation_by_period + 2).Columns(1 + area)
+        Next area
     End If
     
     AdaptativeRotationFlag = Worksheets("Input").Rows(row_rotation_by_period + 3).Columns(2)
+    'if there is no ReOpenConditions you can't have and AdaptativeRotationFlag
+    If (ReOpenConditionFlag = False And AdaptativeRotationFlag = True) Then
+      MsgBox ("Inconsistent flags: setting AdaptativeRotationFlag to False")
+      AdaptativeRotationFlag = False
+      Worksheets("Input").Rows(row_rotation_by_period + 3).Columns(2) = False
+    End If
+    
     
     For i = 1 To Nareas
         RCVirginBiomass_Tolerance(i) = Worksheets("Input").Rows(row_rotation_by_period + 4).Columns(i + 1)
@@ -253,17 +267,17 @@ Case 2  'By Area
             'Public TAC_area y Effort
             If TAC_TAE_HR = 1 Then
                 For i = StYear To EndYear
-                    For Area = 1 To Nareas
-                         TAC_area(i, Area) = Worksheets("Input").Rows(row_catch_specification + 2 + (i - StYear)).Columns(2 + Nregions + Area)
-                    Next Area
+                    For area = 1 To Nareas
+                         TAC_area(i, area) = Worksheets("Input").Rows(row_catch_specification + 2 + (i - StYear)).Columns(2 + Nregions + area)
+                    Next area
                 Next i
             
             ElseIf TAC_TAE_HR = 2 Then
                 
                 For i = StYear To EndYear
-                    For Area = 1 To Nareas
-                        TAE_area(i, Area) = Worksheets("Input").Rows(row_effort_specification + 2 + (i - StYear)).Columns(2 + Nregions + Area)
-                    Next Area
+                    For area = 1 To Nareas
+                        TAE_area(i, area) = Worksheets("Input").Rows(row_effort_specification + 2 + (i - StYear)).Columns(2 + Nregions + area)
+                    Next area
                 Next i
             End If
     'Else
@@ -338,8 +352,8 @@ RunFlags.InputAbundance = Worksheets("Input").Rows(row_input_conditioning + 3).C
 RunFlags.AbundanceType = Worksheets("Input").Rows(row_input_conditioning + 3).Columns(3)
 RunFlags.InputCatch = Worksheets("Input").Rows(row_input_conditioning + 4).Columns(2)
 
-pLopt = Worksheets("Input").Rows(row_rotation_by_period + 17 + 1).Columns(2)
-SurveyCV = Worksheets("Input").Rows(row_rotation_by_period + 17 + 3).Columns(2)
+sample_size_pL = Worksheets("Input").Rows(row_rotation_by_period + 16 + 1).Columns(2)
+SurveyCV = Worksheets("Input").Rows(row_rotation_by_period + 16 + 3).Columns(2)
 InitialCV = Worksheets("Input").Rows(row_initial_conditions + 3).Columns(2)
 RecCV = Worksheets("Input").Rows(row_Population_Dynamics + 2).Columns(2)
 
@@ -352,9 +366,9 @@ If RunFlags.Run_type = 1 Then
         'q_rec = READ FROM INPUT
         
         For i = StYear To EndYear
-            For Area = 1 To Nareas
-                ObsRec(i, Area) = Worksheets("ObsRec").Rows((i - StYear + 1 + Nyears * (Area - 1))).Columns(1)
-            Next Area
+            For area = 1 To Nareas
+                ObsRec(i, area) = Worksheets("ObsRec").Rows((i - StYear + 1 + Nyears * (area - 1))).Columns(1)
+            Next area
         Next i
     End If
     
@@ -382,9 +396,9 @@ If RunFlags.Run_type = 1 Then
         ReDim ObsCatch(StYear To EndYear, Nareas)
         'read Observed Catch
         For i = StYear To EndYear
-            For Area = 1 To Nareas
-                ObsCatch(i, Area) = Worksheets("ObsCatch").Rows(i - StYear + 1).Columns(Area)
-            Next Area
+            For area = 1 To Nareas
+                ObsCatch(i, area) = Worksheets("ObsCatch").Rows(i - StYear + 1).Columns(area)
+            Next area
         Next i
     End If
     

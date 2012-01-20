@@ -1,5 +1,5 @@
 Attribute VB_Name = "Preliminary_Calcs"
-Dim Area As Integer, age As Integer, i As Integer, rr As Integer, i_area As Integer, Nopenareas As Integer
+Dim area As Integer, age As Integer, i As Integer, rr As Integer, i_area As Integer, Nopenareas As Integer
 Dim mu_tmp As Double, sd_tmp As Double, pLTmp() As Double, year As Integer, IDopenarea() As Integer
 Dim SBRXConectividad() As Double
 Dim SBR0_avg As Double
@@ -20,7 +20,6 @@ Attribute Initialize_variables.VB_ProcData.VB_Invoke_Func = " \n14"
 
 ReDim Btotal(StYear - Stage + 1 To SimEndYear + 1, Nareas)
 ReDim Bmature(StYear - Stage To SimEndYear + 1, Nareas)
-ReDim SurveyAll(StYear - Stage + 1 To SimEndYear + 1)
 ReDim SurveyBtot(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
 ReDim SurveyBvul(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
 ReDim SurveyMat(Nsurveys, StYear - Stage + 1 To SimEndYear + 1, Nareas)
@@ -60,7 +59,7 @@ ReDim BtotTmp(Nareas)
 ReDim muTmp(Nareas, Stage To AgePlus)
 ReDim sdTmp(Nareas, Stage To AgePlus)
 ReDim WTmp(Nareas, Stage To AgePlus)
-ReDim Flag_Rec_Fish(Nareas, Stage To AgePlus)
+ReDim flag_Partial_Rec(Nareas, Stage To AgePlus)
 ReDim Z(Nareas, Stage To AgePlus, NpulsosMax)
 ReDim frac(Nareas, Stage To AgePlus, NpulsosMax)
 ReDim pLage(Nareas, Stage To AgePlus, Nilens)
@@ -82,13 +81,13 @@ ReDim Kcarga_adults(Nareas)
 ReDim Atlas(Nareas)
 
 
-For Area = 1 To Nareas
+For area = 1 To Nareas
     For year = StYear To EndYear
-         Catch(year, Area) = 0
+         Catch(year, area) = 0
     Next year
         
     For age = Stage To AgePlus
-            Nfracs(Area, age) = 0
+            Nfracs(area, age) = 0
     Next age
 
        'Optar por tipo de crecimiento
@@ -96,59 +95,59 @@ For Area = 1 To Nareas
           Case 1
             'Density-independent growth
                
-            gk(Area) = 1
+            gk(area) = 1
                         
           Case 2
             
             'Lineal density dependence
          
-            Bg0(Area) = (Kcarga(Area) - Bthreshold(Area)) / (1 - gk(Area)) + Bthreshold(Area)
+            Bg0(area) = (Kcarga(area) - Bthreshold(area)) / (1 - gk(area)) + Bthreshold(area)
                              
         End Select
-            Rho(Area) = Exp(-k(Area))
-            Alpha(Area) = (1 - Rho(Area)) * Linf(Area) * gk(Area)
-            Beta(Area) = 1 - (1 - Rho(Area)) * gk(Area)
+            Rho(area) = Exp(-k(area))
+            Alpha(area) = (1 - Rho(area)) * Linf(area) * gk(area)
+            Beta(area) = 1 - (1 - Rho(area)) * gk(area)
                              
-            Alpha0(Area) = Alpha(Area)
-            Beta0(Area) = Beta(Area)
+            Alpha0(area) = Alpha(area)
+            Beta0(area) = Beta(area)
         
         'Estimate mu@age StAge and W@age StAge per area
-        mu(StYear, Area, Stage) = Linf(Area) * (1 - Exp(-k(Area) * (Stage - t0(Area))))
-        sd(StYear, Area, Stage) = CVmu(Area) * mu(StYear, Area, Stage)
-        muTmp(Area, Stage) = mu(StYear, Area, Stage)
-        sdTmp(Area, Stage) = sd(StYear, Area, Stage)
+        mu(StYear, area, Stage) = Linf(area) * (1 - Exp(-k(area) * (Stage - t0(area))))
+        sd(StYear, area, Stage) = CVmu(area) * mu(StYear, area, Stage)
+        muTmp(area, Stage) = mu(StYear, area, Stage)
+        sdTmp(area, Stage) = sd(StYear, area, Stage)
         
         For ilen = 1 To Nilens
             l(ilen) = L1 + (Linc * (ilen - 1))
-            W_L(Area, ilen) = aW(Area) * l(ilen) ^ bW(Area)
+            W_L(area, ilen) = aW(area) * l(ilen) ^ bW(area)
         Next ilen
         
-Next Area
+Next area
 
-For Area = 1 To Nareas
+For area = 1 To Nareas
     For age = Stage To AgePlus
-        Flag_Rec_Fish(Area, age) = 1
+        flag_Partial_Rec(area, age) = 1
     Next age
-Next Area
+Next area
 
-For Area = 1 To Nareas
+For area = 1 To Nareas
     For age = Stage To AgePlus
         For i = 1 To NpulsosMax
-            Z(Area, age, i) = 0
-            frac(Area, age, i) = 1
+            Z(area, age, i) = 0
+            frac(area, age, i) = 1
         Next i
     Next age
-Next Area
+Next area
 
 
 For yr = StYear To EndYear
     For t = t_StSeason To (t_StSeason + Nt_Season - 1)
         OpenMonth(yr, t) = True
     Next t
-    For Area = 1 To Nareas
+    For area = 1 To Nareas
         'at this point this is just to close permanent areas
-        ClosedArea(yr, Area) = ClosedArea(StYear, Area)
-    Next Area
+        ClosedArea(yr, area) = ClosedArea(StYear, area)
+    Next area
 Next yr
 
 For rr = 1 To Nregions
@@ -156,14 +155,14 @@ For rr = 1 To Nregions
 Next rr
         
 i_area = 0
-For Area = 1 To Nareas
-    If ClosedArea(StYear, Area) = False Then
-        ClosedRegion(Region(Area)) = False
+For area = 1 To Nareas
+    If ClosedArea(StYear, area) = False Then
+        ClosedRegion(Region(area)) = False
         i_area = i_area + 1
         ReDim Preserve IDopenarea(i_area)
-        IDopenarea(i_area) = Area
+        IDopenarea(i_area) = area
     End If
-Next Area
+Next area
 Nopenareas = i_area
 
 For rr = 1 To Nregions
@@ -216,9 +215,9 @@ Next rr
 
 'IF ROTATION THEN CALCULATE AREA
 TotalSurface = 0
-For Area = 1 To Nareas
-    TotalSurface = TotalSurface + Surface(Area)
-Next Area
+For area = 1 To Nareas
+    TotalSurface = TotalSurface + Surface(area)
+Next area
 
 TargetSurface = TargetHR * TotalSurface
 PulseHRadjust = 1
@@ -246,31 +245,31 @@ Attribute Set_Carrying_Capacity.VB_ProcData.VB_Invoke_Func = " \n14"
   
 'Aca estimo cuantos anios proyectar largos y pesos para representar adecuadamente los valores inciales del plusgroup de manera de
 'proyectar hasta una edad Amax correspondiente al 0.001 de la abundandia inicial al reclutamiento
-  For Area = 1 To Nareas
+  For area = 1 To Nareas
             
 ''Amax(Area) = -Log(0.0001) / M(Area)
-     Amax(Area) = 1000
-     Amaxtemp = Amax(Area)
+     Amax(area) = 1000
+     Amaxtemp = Amax(area)
    
      ReDim muStyeartemp(Nareas, Stage To Amaxtemp)
      ReDim NStyeartemp(Nareas, Stage To Amaxtemp)
            
-     muStyeartemp(Area, Stage) = mu(StYear, Area, Stage)
-     NStyeartemp(Area, Stage) = 1
+     muStyeartemp(area, Stage) = mu(StYear, area, Stage)
+     NStyeartemp(area, Stage) = 1
                        
      For age = Stage To AgePlus
-          muStyeartemp(Area, age + 1) = Alpha(Area) + Beta(Area) * muStyeartemp(Area, age)
-          NStyeartemp(Area, age + 1) = NStyeartemp(Area, age) * Exp(-M(Area))
-          mu(StYear, Area, age) = muStyeartemp(Area, age)
-          N(StYear, Area, age) = NStyeartemp(Area, age)
-          muTmp(Area, age) = mu(StYear, Area, age)
-          sdTmp(Area, age) = CVmu(Area) * mu(StYear, Area, age)
+          muStyeartemp(area, age + 1) = Alpha(area) + Beta(area) * muStyeartemp(area, age)
+          NStyeartemp(area, age + 1) = NStyeartemp(area, age) * Exp(-M(area))
+          mu(StYear, area, age) = muStyeartemp(area, age)
+          N(StYear, area, age) = NStyeartemp(area, age)
+          muTmp(area, age) = mu(StYear, area, age)
+          sdTmp(area, age) = CVmu(area) * mu(StYear, area, age)
           
-          Call M8_Library.Norm(Area, age)
+          Call M8_Library.Norm(area, age)
             
-          FracSel(Area, age) = 0
-          For ilen = iLfull(Area) To Nilens
-                FracSel(Area, age) = FracSel(Area, age) + pLage(Area, age, ilen)
+          FracSel(area, age) = 0
+          For ilen = iLfull(area) To Nilens
+                FracSel(area, age) = FracSel(area, age) + pLage(area, age, ilen)
           Next ilen
         
         'Debug.Print FracSel(area,age)
@@ -279,11 +278,11 @@ Attribute Set_Carrying_Capacity.VB_ProcData.VB_Invoke_Func = " \n14"
     'Initialize calculation of pL of  Plus group and store pL for StAge
              
      For ilen = 1 To Nilens
-        pLageplus(Area, ilen) = pLage(Area, AgePlus, ilen) * N(StYear, Area, AgePlus)
-        pLStAge(Area, ilen) = pLage(Area, Stage, ilen)
+        pLageplus(area, ilen) = pLage(area, AgePlus, ilen) * N(StYear, area, AgePlus)
+        pLStAge(area, ilen) = pLage(area, Stage, ilen)
      Next ilen
     
-     FracSelStAge(Area) = FracSel(Area, Stage)
+     FracSelStAge(area) = FracSel(area, Stage)
                 
      Select Case RunFlags.VirginAgePlus
     
@@ -291,15 +290,15 @@ Attribute Set_Carrying_Capacity.VB_ProcData.VB_Invoke_Func = " \n14"
     ''''AGE-BASED FORMULATION FOR PLUS GROUP
     'Compute size composition and average of mu of the Plus group
     
-       mu(StYear, Area, AgePlus) = mu(StYear, Area, AgePlus) * N(StYear, Area, AgePlus)
+       mu(StYear, area, AgePlus) = mu(StYear, area, AgePlus) * N(StYear, area, AgePlus)
             
        For age = AgePlus + 1 To Amaxtemp
                 
      'Calcular pLtmp only for this plus group
-          muStyeartemp(Area, age) = Alpha(Area) + Beta(Area) * muStyeartemp(Area, age - 1)
-          NStyeartemp(Area, age) = NStyeartemp(Area, age - 1) * Exp(-M(Area))
-          mu_tmp = muStyeartemp(Area, age)
-          sd_tmp = CVmu(Area) * mu_tmp
+          muStyeartemp(area, age) = Alpha(area) + Beta(area) * muStyeartemp(area, age - 1)
+          NStyeartemp(area, age) = NStyeartemp(area, age - 1) * Exp(-M(area))
+          mu_tmp = muStyeartemp(area, age)
+          sd_tmp = CVmu(area) * mu_tmp
           intfact = 0
           For ilen = 1 To Nilens
               pLTmp(ilen) = Exp(-0.5 * ((l(ilen) - mu_tmp) / sd_tmp) ^ 2)
@@ -307,11 +306,11 @@ Attribute Set_Carrying_Capacity.VB_ProcData.VB_Invoke_Func = " \n14"
           Next
     
           For ilen = 1 To Nilens
-             pLageplus(Area, ilen) = pLageplus(Area, ilen) + pLTmp(ilen) * NStyeartemp(Area, age) / intfact
+             pLageplus(area, ilen) = pLageplus(area, ilen) + pLTmp(ilen) * NStyeartemp(area, age) / intfact
           Next ilen
                 
-          mu(StYear, Area, AgePlus) = mu(StYear, Area, AgePlus) + muStyeartemp(Area, age) * NStyeartemp(Area, age)
-          N(StYear, Area, AgePlus) = N(StYear, Area, AgePlus) + NStyeartemp(Area, age)
+          mu(StYear, area, AgePlus) = mu(StYear, area, AgePlus) + muStyeartemp(area, age) * NStyeartemp(area, age)
+          N(StYear, area, AgePlus) = N(StYear, area, AgePlus) + NStyeartemp(area, age)
                 
        Next age
     
@@ -331,136 +330,136 @@ Attribute Set_Carrying_Capacity.VB_ProcData.VB_Invoke_Func = " \n14"
           'now growth
            ilen = 1
 
-           While l(ilen) < Linf(Area) And ilen < Nilens
+           While l(ilen) < Linf(area) And ilen < Nilens
    '           Lplus = Alpha(Area) + Beta(Area) * (l(ilen) + 0.5 * Linc)
-              Lplus = Alpha(Area) + Beta(Area) * l(ilen) 'fixed with Ines- l(ilen) is the center of interval
+              Lplus = Alpha(area) + Beta(area) * l(ilen) 'fixed with Ines- l(ilen) is the center of interval
               ilenplus = 1 + (Lplus - L1) / Linc     'this rounds the number (doesn't truncate)
               If (ilenplus > Nilens) Then ilenplus = Nilens
-              pLageplusTmp(ilenplus) = pLageplusTmp(ilenplus) + pLageplus(Area, ilen)
+              pLageplusTmp(ilenplus) = pLageplusTmp(ilenplus) + pLageplus(area, ilen)
               ilen = ilen + 1
            Wend
             
            For i = ilen To Nilens       'NB! these are for l(ilen) >= Linf
-                pLageplusTmp(i) = pLageplusTmp(i) + pLageplus(Area, i)
+                pLageplusTmp(i) = pLageplusTmp(i) + pLageplus(area, i)
            Next i
             
            For ilen = 1 To Nilens
-                pLageplus(Area, ilen) = pLageplusTmp(ilen) * Exp(-M(Area)) + pLage(Area, AgePlus, ilen) * NStyeartemp(Area, AgePlus)
+                pLageplus(area, ilen) = pLageplusTmp(ilen) * Exp(-M(area)) + pLage(area, AgePlus, ilen) * NStyeartemp(area, AgePlus)
                 ' Debug.Print pLageplus(area, ilen)
            Next ilen
            
-           NStyeartemp(Area, age) = NStyeartemp(Area, age - 1) * Exp(-M(Area))
-           N(StYear, Area, AgePlus) = N(StYear, Area, AgePlus) + NStyeartemp(Area, age)
+           NStyeartemp(area, age) = NStyeartemp(area, age - 1) * Exp(-M(area))
+           N(StYear, area, AgePlus) = N(StYear, area, AgePlus) + NStyeartemp(area, age)
       Next age
               
       For ilen = 1 To Nilens
-           Debug.Print pLageplus(Area, ilen)
-           mu(StYear, Area, AgePlus) = mu(StYear, Area, AgePlus) + l(ilen) * pLageplus(Area, ilen)
+           Debug.Print pLageplus(area, ilen)
+           mu(StYear, area, AgePlus) = mu(StYear, area, AgePlus) + l(ilen) * pLageplus(area, ilen)
       Next ilen
                                    
      End Select
  '''''''''''''''''''' END AGE vs SIZE FORMULATION for size comp of Plus group
  
-     mu(StYear, Area, AgePlus) = mu(StYear, Area, AgePlus) / N(StYear, Area, AgePlus)
+     mu(StYear, area, AgePlus) = mu(StYear, area, AgePlus) / N(StYear, area, AgePlus)
     
      For ilen = 1 To Nilens
-        pLageplus(Area, ilen) = pLageplus(Area, ilen) / N(StYear, Area, AgePlus)
-        pLage(Area, AgePlus, ilen) = pLageplus(Area, ilen)
+        pLageplus(area, ilen) = pLageplus(area, ilen) / N(StYear, area, AgePlus)
+        pLage(area, AgePlus, ilen) = pLageplus(area, ilen)
      Next ilen
      
      'Get FracMat() vector from Maturity Function
      Call M5_Popdyn.Maturity(AgeFullMature, FracMat)
                 
-     BR0(Area) = 0
-     SBR0(Area) = 0
+     BR0(area) = 0
+     SBR0(area) = 0
     
      For age = Stage To AgePlus
-        w(StYear, Area, age) = 0
+        w(StYear, area, age) = 0
             
         For ilen = 1 To Nilens
-           w(StYear, Area, age) = w(StYear, Area, age) + W_L(Area, ilen) * pLage(Area, age, ilen)
+           w(StYear, area, age) = w(StYear, area, age) + W_L(area, ilen) * pLage(area, age, ilen)
         Next ilen
             
-        BR0(Area) = BR0(Area) + w(StYear, Area, age) * N(StYear, Area, age)  'total biomass per recruit- N is here a survival fraction
-        SBR0(Area) = SBR0(Area) + w(StYear, Area, age) * N(StYear, Area, age) * FracMat(age)  'spawning biomass per recruit
+        BR0(area) = BR0(area) + w(StYear, area, age) * N(StYear, area, age)  'total biomass per recruit- N is here a survival fraction
+        SBR0(area) = SBR0(area) + w(StYear, area, age) * N(StYear, area, age) * FracMat(age)  'spawning biomass per recruit
 
      Next age
         
-     R0(Area) = Kcarga(Area) / BR0(Area)
-     N(StYear, Area, Stage) = R0(Area)
-     Bmature(StYear, Area) = R0(Area) * SBR0(Area)
+     R0(area) = Kcarga(area) / BR0(area)
+     N(StYear, area, Stage) = R0(area)
+     Bmature(StYear, area) = R0(area) * SBR0(area)
                 
-     Btotal(StYear, Area) = 0
-     Bvulnerable(StYear, Area) = 0
+     Btotal(StYear, area) = 0
+     Bvulnerable(StYear, area) = 0
           
      For age = Stage + 1 To AgePlus
          Wvul = 0
-         For ilen = iLfull(Area) To Nilens
-             Wvul = Wvul + W_L(Area, ilen) * pLage(Area, age, ilen)
+         For ilen = iLfull(area) To Nilens
+             Wvul = Wvul + W_L(area, ilen) * pLage(area, age, ilen)
          Next ilen
             
-         N(StYear, Area, age) = R0(Area) * N(StYear, Area, age)
+         N(StYear, area, age) = R0(area) * N(StYear, area, age)
     'NB: these are missing contribution of Stage
-         Btotal(StYear, Area) = Btotal(StYear, Area) + N(StYear, Area, age) * w(StYear, Area, age)
-         Bvulnerable(StYear, Area) = Bvulnerable(StYear, Area) + N(StYear, Area, age) * Wvul * FracSel(Area, age)
+         Btotal(StYear, area) = Btotal(StYear, area) + N(StYear, area, age) * w(StYear, area, age)
+         Bvulnerable(StYear, area) = Bvulnerable(StYear, area) + N(StYear, area, age) * Wvul * FracSel(area, age)
    
               'Debug.Print Bvulnerable(StYear, area)
               'Debug.Print Wvul
      Next age   'this loop is from StAge+1
                 
      Wvul = 0
-     For ilen = iLfull(Area) To Nilens
-         Wvul = Wvul + W_L(Area, ilen) * pLage(Area, Stage, ilen)
+     For ilen = iLfull(area) To Nilens
+         Wvul = Wvul + W_L(area, ilen) * pLage(area, Stage, ilen)
      Next ilen
-     WvulStage(Area) = Wvul
+     WvulStage(area) = Wvul
 
-     VB0(Area) = Bvulnerable(StYear, Area) + R0(Area) * WvulStage(Area) * FracSel(Area, Stage)
-     SB0(StYear, Area) = Bmature(StYear, Area)   'esta inclute Stage
+     VB0(area) = Bvulnerable(StYear, area) + R0(area) * WvulStage(area) * FracSel(area, Stage)
+     SB0(StYear, area) = Bmature(StYear, area)   'esta inclute Stage
     
-  Next Area
+  Next area
 
   SBR0_avg = 0
   R0total = 0
   VB0_all = 0
   SB0_all = 0
     
-  For Area = 1 To Nareas
-       VB0_all = VB0_all + VB0(Area)
-       SB0_all = SB0_all + SB0(StYear, Area)
-       SBR0_avg = SBR0_avg + R0(Area) * SBR0(Area)
-       R0total = R0total + R0(Area)
-  Next Area
+  For area = 1 To Nareas
+       VB0_all = VB0_all + VB0(area)
+       SB0_all = SB0_all + SB0(StYear, area)
+       SBR0_avg = SBR0_avg + R0(area) * SBR0(area)
+       R0total = R0total + R0(area)
+  Next area
     
     SBR0_avg = SBR0_avg / R0total
         
-   For Area = 1 To Nareas
-     SBRXConectividad(Area) = 0
+   For area = 1 To Nareas
+     SBRXConectividad(area) = 0
      For i = 1 To Nareas
          'SBRXConectividad(Area) = SBRXConectividad(Area) + Connect(Area, i) * SBR0(i)
-         SBRXConectividad(Area) = SBRXConectividad(Area) + Connect(Area, i) * SBR0(i) * R0(i) / R0(Area)
+         SBRXConectividad(area) = SBRXConectividad(area) + Connect(area, i) * SBR0(i) * R0(i) / R0(area)
      Next i
 
        ' Debug.Print SBRXConectividad(Area)
-   Next Area
+   Next area
     
   'compute minimum
    minSBRXConectividad = SBRXConectividad(1)
 
-     For Area = 2 To Nareas
-          If SBRXConectividad(Area) < minSBRXConectividad Then minSBRXConectividad = SBRXConectividad(Area)
-     Next Area
+     For area = 2 To Nareas
+          If SBRXConectividad(area) < minSBRXConectividad Then minSBRXConectividad = SBRXConectividad(area)
+     Next area
     
    ProdXB = (1 / minSBRXConectividad) * Lambda_ProdXB
     
    Call M6_Prod_Alloc_Larvae.Prod_Alloc_Larvae(StYear, SB0) 'in StYear B will be at carrying capacity
 
-   For Area = 1 To Nareas
+   For area = 1 To Nareas
         
       For year = StYear To StYear + Stage - 1
-            Settlers(year, Area) = Settlers(StYear + Stage, Area)
+            Settlers(year, area) = Settlers(StYear + Stage, area)
          '      Debug.Print Settlers(year, area)
       Next year
-   Next Area
+   Next area
 
   
   Call Input_Output.Print_Initial_Conditions("Carrying_Capacity")
@@ -484,9 +483,9 @@ ReDim SBvirgin(Nareas), VBvirgin(Nareas)  'there are different from VB0 and SB0
         SimEndYear = StYear + 200
     
     'Start from K and simulate forward with no harvest
-    For Area = 1 To Nareas
-          HRTmp(Area) = 0
-    Next Area
+    For area = 1 To Nareas
+          HRTmp(area) = 0
+    Next area
                     
     Call Preliminary_Calcs.Initialize_tmp_variables  'these are the state variables used in the pop dyn loops
     
@@ -503,39 +502,39 @@ ReDim SBvirgin(Nareas), VBvirgin(Nareas)  'there are different from VB0 and SB0
      Next simyear
      
 'initialize variables for initial condition simulation
-     For Area = 1 To Nareas
+     For area = 1 To Nareas
          For age = Stage To AgePlus
-              N(StYear, Area, age) = N(SimEndYear, Area, age)
-              mu(StYear, Area, age) = mu(SimEndYear, Area, age)
-              sd(StYear, Area, age) = sd(SimEndYear, Area, age)
-              w(StYear, Area, age) = w(SimEndYear, Area, age)
+              N(StYear, area, age) = N(SimEndYear, area, age)
+              mu(StYear, area, age) = mu(SimEndYear, area, age)
+              sd(StYear, area, age) = sd(SimEndYear, area, age)
+              w(StYear, area, age) = w(SimEndYear, area, age)
           Next age
           
-          N(StYear, Area, Stage) = N(SimEndYear - 1, Area, Stage)
-          Bmature(StYear, Area) = Bmature(SimEndYear - 1, Area)
+          N(StYear, area, Stage) = N(SimEndYear - 1, area, Stage)
+          Bmature(StYear, area) = Bmature(SimEndYear - 1, area)
           'NB next biomasses are missing Stage which is OK - will be added at start of pop dyn loop
-          Btotal(StYear, Area) = Btotal(SimEndYear, Area)
-          Bvulnerable(StYear, Area) = Bvulnerable(SimEndYear, Area)
+          Btotal(StYear, area) = Btotal(SimEndYear, area)
+          Bvulnerable(StYear, area) = Bvulnerable(SimEndYear, area)
       
           
           For year = StYear To StYear + Stage - 1
-              Settlers(year, Area) = Settlers(SimEndYear - 1, Area)
+              Settlers(year, area) = Settlers(SimEndYear - 1, area)
           Next year
           
-          VBvirgin(Area) = Bvulnerable(StYear, Area) + N(StYear, Area, Stage) * WvulStage(Area) * FracSel(Area, Stage)
-          SBvirgin(Area) = Bmature(StYear, Area)  'includes Stage because it was calculated within Prod_Alloc_Larvae
+          VBvirgin(area) = Bvulnerable(StYear, area) + N(StYear, area, Stage) * WvulStage(area) * FracSel(area, Stage)
+          SBvirgin(area) = Bmature(StYear, area)  'includes Stage because it was calculated within Prod_Alloc_Larvae
           
-     Next Area
+     Next area
                         
      Call Input_Output.Print_Initial_Conditions("Virgin_Conditions")
 
 
 VBvirgin_all = 0
 SBvirgin_all = 0
-For Area = 1 To Nareas
-    VBvirgin_all = VBvirgin_all + VBvirgin(Area)
-    SBvirgin_all = SBvirgin_all + SBvirgin(Area)
-Next Area
+For area = 1 To Nareas
+    VBvirgin_all = VBvirgin_all + VBvirgin(area)
+    SBvirgin_all = SBvirgin_all + SBvirgin(area)
+Next area
 
 End Sub
 
@@ -547,7 +546,7 @@ End Sub
 
 Sub Set_InitialConditions()
 Attribute Set_InitialConditions.VB_ProcData.VB_Invoke_Func = " \n14"
-Dim year As Integer, Area As Integer, simyear As Integer
+Dim year As Integer, area As Integer, simyear As Integer
 
 Select Case RunFlags.Initial_Conditions
 
@@ -567,9 +566,9 @@ Select Case RunFlags.Initial_Conditions
     
     'Start from Virgin and simulate forward under constant harvest rate = HR_start(area)
   
-    For Area = 1 To Nareas
-          HRTmp(Area) = HR_start(Area)
-    Next Area
+    For area = 1 To Nareas
+          HRTmp(area) = HR_start(area)
+    Next area
                 
     For simyear = StYear To SimEndYear - 1
                
@@ -583,24 +582,24 @@ Select Case RunFlags.Initial_Conditions
     
      Next simyear
  
-     For Area = 1 To Nareas
+     For area = 1 To Nareas
          For age = Stage To AgePlus
-              N(StYear, Area, age) = N(SimEndYear, Area, age)
-              mu(StYear, Area, age) = mu(SimEndYear, Area, age)
-              sd(StYear, Area, age) = sd(SimEndYear, Area, age)
-              w(StYear, Area, age) = w(SimEndYear, Area, age)
+              N(StYear, area, age) = N(SimEndYear, area, age)
+              mu(StYear, area, age) = mu(SimEndYear, area, age)
+              sd(StYear, area, age) = sd(SimEndYear, area, age)
+              w(StYear, area, age) = w(SimEndYear, area, age)
           Next age
           
-          N(StYear, Area, Stage) = N(SimEndYear - 1, Area, Stage) 'NB use SimEndYear-1 because after annual update N at Stage is zero
-          Bmature(StYear, Area) = Bmature(SimEndYear - 1, Area)
-          Btotal(StYear, Area) = Btotal(SimEndYear, Area)
-          Bvulnerable(StYear, Area) = Bvulnerable(SimEndYear, Area)
+          N(StYear, area, Stage) = N(SimEndYear - 1, area, Stage) 'NB use SimEndYear-1 because after annual update N at Stage is zero
+          Bmature(StYear, area) = Bmature(SimEndYear - 1, area)
+          Btotal(StYear, area) = Btotal(SimEndYear, area)
+          Bvulnerable(StYear, area) = Bvulnerable(SimEndYear, area)
 
                                
           For year = StYear To StYear + Stage
-              Settlers(year, Area) = Settlers(SimEndYear - 1, Area)
+              Settlers(year, area) = Settlers(SimEndYear - 1, area)
           Next year
-     Next Area
+     Next area
                         
      Call Input_Output.Print_Initial_Conditions("Initial_Conditions")
   
@@ -614,11 +613,11 @@ Select Case RunFlags.Initial_Conditions
 End Sub
 Sub Rescale_parameters()
 Attribute Rescale_parameters.VB_ProcData.VB_Invoke_Func = " \n14"
-For Area = 1 To Nareas
-        M(Area) = M(Area) / Nt
-        k(Area) = k(Area) / Nt
-        Rho(Area) = Exp(-k(Area))
-Next Area
+For area = 1 To Nareas
+        M(area) = M(area) / Nt
+        k(area) = k(area) / Nt
+        Rho(area) = Exp(-k(area))
+Next area
 End Sub
 
 '#################################################################################
@@ -627,17 +626,17 @@ End Sub
 
 Sub Initialize_tmp_variables()
 
-  For Area = 1 To Nareas
+  For area = 1 To Nareas
   '     BvulTmp(Area) = Bvulnerable(StYear, Area)
   '     BtotTmp(Area) = Btotal(StYear, Area)
        
        For age = Stage To AgePlus
-           NTmp(Area, age) = N(StYear, Area, age)
-           muTmp(Area, age) = mu(StYear, Area, age)
-           sdTmp(Area, age) = CVmu(Area) * muTmp(Area, age)
-           WTmp(Area, age) = w(StYear, Area, age)
+           NTmp(area, age) = N(StYear, area, age)
+           muTmp(area, age) = mu(StYear, area, age)
+           sdTmp(area, age) = CVmu(area) * muTmp(area, age)
+           WTmp(area, age) = w(StYear, area, age)
        Next age
              
-  Next Area
+  Next area
 
 End Sub

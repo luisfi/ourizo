@@ -4,7 +4,7 @@ Attribute VB_Name = "M1_VarDef"
 
 Public Language As String
 
-Public age As Integer, i As Long, j As Long, h As Long, ilen As Integer, Area As Integer
+Public age As Integer, i As Long, j As Long, h As Long, ilen As Integer, area As Integer
 
 'Declaring dimensioning variables
 Public AgePlus As Integer
@@ -86,7 +86,6 @@ Public effort() As Double
 Public Larvae() As Double
 Public Bmature() As Double
 Public Btotal() As Double
-Public SurveyAll() As Double
 Public SurveyBtot() As Double
 Public SurveyBvul() As Double
 Public SurveyMat() As Double
@@ -97,7 +96,7 @@ Public SurveypL() As Double
 
 'Public SurveyUnit() As Double
 'Public SurveyVariable() As Double
-Public pLopt As Boolean
+Public sample_size_pL As Integer ' Sample Size to compute pL in survey
 Public Nsurveys As Integer
 'Public SurveyQ() As Integer
 'Public SurveyCV() As Integer
@@ -155,7 +154,7 @@ Public Linf() As Double, aW() As Double, bW() As Double, _
 Public BvulTmp() As Double, NTmp() As Double, BtotTmp() As Double, muTmp() As Double, sdTmp() As Double, WTmp() As Double, _
 HRTmp() As Double
 'Fishing dynamics
-Public Flag_Rec_Fish() As Integer, Nfracs() As Integer, Z() As Double, frac() As Double, NpulsosMax As Integer, pLage() As Double
+Public flag_Partial_Rec() As Integer, Nfracs() As Integer, Z() As Double, frac() As Double, NpulsosMax As Integer, pLage() As Double
 
 'Not categorized yet
 Public ProdXB As Double
@@ -186,7 +185,6 @@ Public Type Flags
    VirginAgePlus As Integer
 
    InputRec As Boolean
-
    InputBvul As Boolean
    BvulType As Integer
    InputAbundance As Boolean

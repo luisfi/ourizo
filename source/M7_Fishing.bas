@@ -6,7 +6,7 @@ Sub Fishing(year, t)
 Attribute Fishing.VB_ProcData.VB_Invoke_Func = " \n14"
 'This subrutine's main output is to calculate HRTmp y Catch
 
-Dim Area As Integer, pulse As Integer, i_t As Integer, i_area As Integer, rr As Integer, _
+Dim area As Integer, pulse As Integer, i_t As Integer, i_area As Integer, rr As Integer, _
     j As Integer, Nopenareas As Integer, Nopenregions As Integer, Nfishedareas As Integer, _
     NN As Integer, i_rr As Integer
 Dim Max As Double
@@ -23,62 +23,62 @@ Select Case RunFlags.Hstrategy
 
 Case 1 ' ROTATIONAL ESTO ES ANUAL
  
-  For Area = 1 To Nareas
-     If ClosedAreaTmp(Area) = False Then
+  For area = 1 To Nareas
+     If ClosedAreaTmp(area) = False Then
         If TAC_TAE_HR = 1 Then
-           Catch(year, Area) = TAC_area(year, Area)
+           Catch(year, area) = TAC_area(year, area)
         ElseIf TAC_TAE_HR = 2 Then
            MsgBox ("Rotation scheme not implemented for additional effort (input) control")
            End
         ElseIf TAC_TAE_HR = 3 Then
-           Catch(year, Area) = BvulTmp(Area) * TargetHR
+           Catch(year, area) = BvulTmp(area) * TargetHR
         Else
-           HRTmp(Area) = PulseHR * PulseHRadjust
+           HRTmp(area) = PulseHR * PulseHRadjust
         
            'Update Atlas for the harvested areas
-           If PartialSurveyFlag = True Then Atlas(Area) = SurveyBvul(1, year, Area) * (1 - HRTmp(Area))
+           If PartialSurveyFlag = True Then Atlas(area) = SurveyBvul(1, year, area) * (1 - HRTmp(area))
 
-           Catch(year, Area) = BvulTmp(Area) * HRTmp(Area)
+           Catch(year, area) = BvulTmp(area) * HRTmp(area)
         End If
      Else
-        HRTmp(Area) = 0
+        HRTmp(area) = 0
      End If
-  Next Area
+  Next area
    
 Case 2  'SPATIAL MANAGEMENT BY INDIVIDUAL AREA
 
 ' set ID of areas open to fishing
  
-  For Area = 1 To Nareas
-    If ClosedAreaTmp(Area) = False Then
+  For area = 1 To Nareas
+    If ClosedAreaTmp(area) = False Then
              
         If TAC_TAE_HR = 1 Then
             
-            HRTmp(Area) = TAC_area(year, Area) / BvulTmp(Area)
+            HRTmp(area) = TAC_area(year, area) / BvulTmp(area)
             
-                If HRTmp(Area) <= 0.9 Then
-                        Catch(year, Area) = TAC_area(year, Area)
+                If HRTmp(area) <= 0.9 Then
+                        Catch(year, area) = TAC_area(year, area)
                 Else
-                        HRTmp(Area) = 0.9
-                        Catch(year, Area) = BvulTmp(Area) * HRTmp(Area)
+                        HRTmp(area) = 0.9
+                        Catch(year, area) = BvulTmp(area) * HRTmp(area)
                 End If
                         
         ElseIf TAC_TAE_HR = 2 Then
                     
-            HRTmp(Area) = 1 - Exp(-q(Area) * TAE_area(year, Area))
-            Catch(year, Area) = BvulTmp(Area) * HRTmp(Area)
+            HRTmp(area) = 1 - Exp(-q(area) * TAE_area(year, area))
+            Catch(year, area) = BvulTmp(area) * HRTmp(area)
                 
         ElseIf TAC_TAE_HR = 3 Then
         
-            HRTmp(Area) = TargetHR
-            Catch(year, Area) = BvulTmp(Area) * HRTmp(Area)
+            HRTmp(area) = TargetHR
+            Catch(year, area) = BvulTmp(area) * HRTmp(area)
             
         End If
                 
     Else      'the area is closed
-        HRTmp(Area) = 0
+        HRTmp(area) = 0
     End If
-  Next Area
+  Next area
 
 Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuerzo entre areas e.g. IFD)
     
@@ -96,9 +96,9 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
         
         NN = Nopenregions   'NN is number of open regions at the start of the month
                     
-        For Area = 1 To Nareas
-           EffortTmp(Area) = 0
-        Next Area
+        For area = 1 To Nareas
+           EffortTmp(area) = 0
+        Next area
                       
       
     If EffortDistributionFlag = 1 Then     ' Subcaso 1 IFD-  This is the obsolete ideal free distribution algorithm
@@ -121,36 +121,36 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
                               'NB!:  assumes that effort is global, not regionalized
                   i_area = 0
                   Max = 0
-                  For Area = 1 To Nareas
-                     If ClosedAreaTmp(Area) = False Then
+                  For area = 1 To Nareas
+                     If ClosedAreaTmp(area) = False Then
                          i_area = i_area + 1
                          ReDim Preserve IDopenareaTmp(i_area)
-                         IDopenareaTmp(i_area) = Area
-                         CR(Area) = BvulTmp(Area) * q(Area)
+                         IDopenareaTmp(i_area) = area
+                         CR(area) = BvulTmp(area) * q(area)
                            'Determination of area with highest catch rate
-                         Max = 1 / 2 * (CR(Area) + Max + Abs(Max - CR(Area)))
+                         Max = 1 / 2 * (CR(area) + Max + Abs(Max - CR(area)))
                      End If
-                  Next Area
+                  Next area
                         
                   Nopenareas = i_area
                         
                   'Determine number of areas to fish
                   Nfishedareas = 0
                   For i_area = 1 To Nopenareas
-                      Area = IDopenareaTmp(i_area)
-                      If ((1 - CR(Area) / Max) < Sens) = True Then
+                      area = IDopenareaTmp(i_area)
+                      If ((1 - CR(area) / Max) < Sens) = True Then
                         Nfishedareas = Nfishedareas + 1
                         ReDim Preserve IDfishedarea(Nfishedareas)
-                        IDfishedarea(Nfishedareas) = Area
+                        IDfishedarea(Nfishedareas) = area
                       End If
                   Next i_area
                         
                   For i_area = 1 To Nfishedareas   'Allocation of effort
-                      Area = IDfishedarea(i_area)
-                      EffortPulseArea(Area) = EffortPulse / Nfishedareas    'EffortPulse set by MP
-                      CatchPulseArea(Area) = BvulTmp(Area) * (1 - Exp(-EffortPulseArea(Area) * q(Area)))
-                      rr = Region(Area)
-                      CatchPulseRegion(rr) = CatchPulseRegion(rr) + CatchPulseArea(Area)
+                      area = IDfishedarea(i_area)
+                      EffortPulseArea(area) = EffortPulse / Nfishedareas    'EffortPulse set by MP
+                      CatchPulseArea(area) = BvulTmp(area) * (1 - Exp(-EffortPulseArea(area) * q(area)))
+                      rr = Region(area)
+                      CatchPulseRegion(rr) = CatchPulseRegion(rr) + CatchPulseArea(area)
                   Next i_area
                                      
                   For i_rr = 1 To Nopenregions   'loop over regions open AT BEGINING of month even though some
@@ -162,10 +162,10 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
                                ClosedRegionTmp(rr) = True
                                NN = NN - 1           'decrease number of open regions for each one closed during this pulse
                                For i_area = 1 To Nareas_region(rr)
-                                  Area = Candidate_areas(rr, i_area)
-                                  CatchPulseArea(Area) = CatchPulseArea(Area) * CatchAdjust(rr)
-                                  EffortPulseArea(Area) = -Log(1 - CatchPulseArea(Area) / BvulTmp(Area)) / q(Area)                           'Rough approximate
-                                  ClosedAreaTmp(Area) = True
+                                  area = Candidate_areas(rr, i_area)
+                                  CatchPulseArea(area) = CatchPulseArea(area) * CatchAdjust(rr)
+                                  EffortPulseArea(area) = -Log(1 - CatchPulseArea(area) / BvulTmp(area)) / q(area)                           'Rough approximate
+                                  ClosedAreaTmp(area) = True
                                Next i_area
                            End If
                            AnnualCatch(rr) = AnnualCatch(rr) + CatchPulseRegion(rr)
@@ -173,11 +173,11 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
                   Next i_rr
                         
                   For i_area = 1 To Nfishedareas
-                         Area = IDfishedarea(i_area)
-                         rr = Region(Area)
-                         EffortTmp(Area) = EffortTmp(Area) + EffortPulseArea(Area)   'cumulative over month
-                         BvulTmp(Area) = BvulTmp(Area) - CatchPulseArea(Area)
-                         Catch(year, Area) = Catch(year, Area) + CatchPulseArea(Area)
+                         area = IDfishedarea(i_area)
+                         rr = Region(area)
+                         EffortTmp(area) = EffortTmp(area) + EffortPulseArea(area)   'cumulative over month
+                         BvulTmp(area) = BvulTmp(area) - CatchPulseArea(area)
+                         Catch(year, area) = Catch(year, area) + CatchPulseArea(area)
                   Next i_area
                                                                  
                   If NN = 0 Then     'no more regions open to fishing
@@ -195,31 +195,31 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
                     
                 Max = 0
                 For i_area = 1 To Nareas_region(rr)
-                    Area = Candidate_areas(rr, i_area)
-                    CR(Area) = BvulTmp(Area) * q(Area)
+                    area = Candidate_areas(rr, i_area)
+                    CR(area) = BvulTmp(area) * q(area)
                       'Determination of area with highest catch rate
-                    Max = 1 / 2 * (CR(Area) + Max + Abs(Max - CR(Area)))
+                    Max = 1 / 2 * (CR(area) + Max + Abs(Max - CR(area)))
                 Next i_area
                
                 'Determination of number of areas to fish
                 Nfishedareas = 0
                 
                 For i_area = 1 To Nareas_region(rr)
-                    Area = Candidate_areas(rr, i_area)
-                    If ((1 - CR(Area) / Max) < Sens) = True Then
+                    area = Candidate_areas(rr, i_area)
+                    If ((1 - CR(area) / Max) < Sens) = True Then
                          Nfishedareas = Nfishedareas + 1
                          ReDim Preserve IDfishedarea(Nfishedareas)
-                         IDfishedarea(Nfishedareas) = Area
+                         IDfishedarea(Nfishedareas) = area
                     End If
                 Next i_area
                    
                 For i_area = 1 To Nfishedareas   'Allocate effort
-                      Area = IDfishedarea(i_area)
-                      EffortPulseArea(Area) = EffortPulseRegion(rr) / Nfishedareas
-                      CatchPulseArea(Area) = BvulTmp(Area) * (1 - Exp(-EffortPulseArea(Area) * q(Area)))
-                      EffortTmp(Area) = EffortTmp(Area) + EffortPulseArea(Area)   'cumulative over month
-                      BvulTmp(Area) = BvulTmp(Area) - CatchPulseArea(Area)
-                      Catch(year, Area) = Catch(year, Area) + CatchPulseArea(Area)
+                      area = IDfishedarea(i_area)
+                      EffortPulseArea(area) = EffortPulseRegion(rr) / Nfishedareas
+                      CatchPulseArea(area) = BvulTmp(area) * (1 - Exp(-EffortPulseArea(area) * q(area)))
+                      EffortTmp(area) = EffortTmp(area) + EffortPulseArea(area)   'cumulative over month
+                      BvulTmp(area) = BvulTmp(area) - CatchPulseArea(area)
+                      Catch(year, area) = Catch(year, area) + CatchPulseArea(area)
                 Next i_area
                 
               Next i_rr
@@ -228,10 +228,10 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
            
         Next pulse
      
-        For Area = 1 To Nareas
-           effort(year, Area) = effort(year, Area) + EffortTmp(Area)
-           HRTmp(Area) = (1 - Exp(-EffortTmp(Area) * q(Area)))
-        Next Area
+        For area = 1 To Nareas
+           effort(year, area) = effort(year, area) + EffortTmp(area)
+           HRTmp(area) = (1 - Exp(-EffortTmp(area) * q(area)))
+        Next area
      
     ElseIf EffortDistributionFlag = 2 Then      'IFD modified from Walters & Martel
                
@@ -259,17 +259,17 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
          Next i_rr
          
          i_area = 0
-         For Area = 1 To Nareas
-            If ClosedAreaTmp(Area) = False Then
+         For area = 1 To Nareas
+            If ClosedAreaTmp(area) = False Then
                i_area = i_area + 1
                ReDim Preserve ordenvector(i_area)
                ReDim Preserve orderedareas(i_area)
-               CR(Area) = q(Area) * BvulTmp(Area) / (1 + q(Area) * handling * BvulTmp(Area))
-               profit(Area) = price * CR(Area) - cost(Area)
-               ordenvector(i_area) = profit(Area)
-               orderedareas(i_area) = Area
+               CR(area) = q(area) * BvulTmp(area) / (1 + q(area) * handling * BvulTmp(area))
+               profit(area) = price * CR(area) - cost(area)
+               ordenvector(i_area) = profit(area)
+               orderedareas(i_area) = area
             End If
-         Next Area
+         Next area
          Nopenareas = i_area
             
          Call order(ordenvector, orderedareas)   'sort areas by profitability
@@ -284,8 +284,8 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
             Call EqualizePops1TAC(orderedareas, profit, Nopenareas, EffortPulse, TACleft(1), pr0, Nfishedareas, boundbyTAC)
                        
             For i = 1 To Nfishedareas
-               Area = orderedareas(i)
-               Call calcAll(pr0, Area, year)
+               area = orderedareas(i)
+               Call calcAll(pr0, area, year)
             Next i
             
             If boundbyTAC = True Then     'reached TAC
@@ -321,11 +321,11 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
             ReDim orderedareas(1 To Nareas_region(rr))
                     
             For i_area = 1 To Nareas_region(rr)
-                 Area = Candidate_areas(rr, i_area)
-                 CR(Area) = q(Area) * BvulTmp(Area) / (1 + q(Area) * handling * BvulTmp(Area))
-                 profit(Area) = price * CR(Area) - cost(Area)
-                 ordenvector(i_area) = profit(Area)
-                 orderedareas(i_area) = Area
+                 area = Candidate_areas(rr, i_area)
+                 CR(area) = q(area) * BvulTmp(area) / (1 + q(area) * handling * BvulTmp(area))
+                 profit(area) = price * CR(area) - cost(area)
+                 ordenvector(i_area) = profit(area)
+                 orderedareas(i_area) = area
             Next i_area
             
             Call order(ordenvector, orderedareas)
@@ -343,8 +343,8 @@ Case 3 ' GLOBAL or REGIONAL MANAGEMENT (implica que hay que distribuir el esfuer
  
             'Calculates efforts and fished abundances as a function of pro
             For i = 1 To Nfishedareas
-               Area = orderedareas(i)
-               Call calcAll(pr0, Area, year)
+               area = orderedareas(i)
+               Call calcAll(pr0, area, year)
             Next
          Next i_rr
          
@@ -528,15 +528,15 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
       eff = 0
       indb = orderedareas(j)   'this is the actual Area
       For i = 1 To j - 1
-          Area = orderedareas(i)   'area fished
+          area = orderedareas(i)   'area fished
        
-          If (ClosedAreaTmp(Area) = False) Then
-             rr = Region(Area)
+          If (ClosedAreaTmp(area) = False) Then
+             rr = Region(area)
              i_rr = iregion(rr)
              Nfishedareasregion(i_rr) = Nfishedareasregion(i_rr) + 1
-             proci = profit(indb) + cost(Area)
-             Nfin = proci / (price * q(Area) - q(Area) * handling * proci)
-             cat = BvulTmp(Area) - Nfin
+             proci = profit(indb) + cost(area)
+             Nfin = proci / (price * q(area) - q(area) * handling * proci)
+             cat = BvulTmp(area) - Nfin
              
              If (CatchPulseRegion(i_rr) + cat > TACleft(i_rr)) Then
                 
@@ -546,10 +546,10 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
                 ReDim fishedareas(NN)
                 ii = 0
                 For i_area = 1 To j - 1 'select from all fished areas those that are in the i_rr-th open region
-                   Area = orderedareas(i_area)
-                   If (Region(Area) = rr) Then
+                   area = orderedareas(i_area)
+                   If (Region(area) = rr) Then
                       ii = ii + 1
-                      fishedareas(ii) = Area
+                      fishedareas(ii) = area
                    End If
                 Next i_area
                 
@@ -557,20 +557,20 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
                 If (boundbyTAC = True) Then
                    ClosedRegionTmp(rr) = True  'cerrar la region y las areas de esta region
                    For i_area = 1 To Nareas_region(rr)
-                      Area = Candidate_areas(rr, i_area)
-                      ClosedAreaTmp(Area) = True
+                      area = Candidate_areas(rr, i_area)
+                      ClosedAreaTmp(area) = True
                    Next i_area
                    Nopen = Nopen - 1
                 End If
                 
                 For ii = 1 To NN
-                   Area = fishedareas(ii)
-                   Call calcAll(pr0, Area, year)
-                   ETleft = ETleft - EffortTmp(Area)
+                   area = fishedareas(ii)
+                   Call calcAll(pr0, area, year)
+                   ETleft = ETleft - EffortTmp(area)
                 Next ii
              Else
-                Ninitial = BvulTmp(Area)
-                effarea = handling * cat - Log(Nfin / Ninitial) / q(Area)
+                Ninitial = BvulTmp(area)
+                effarea = handling * cat - Log(Nfin / Ninitial) / q(area)
                 CatchPulseRegion(i_rr) = CatchPulseRegion(i_rr) + cat
                 eff = eff + effarea
              End If
@@ -609,8 +609,8 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
         Call EqualizePops1TAC(subset, profit, Nareas_region(rr), ETleft, TACleft(iopenregion), pr0, Nfishedareas, boundbyTAC)
                        
             For i = 1 To Nfishedareas
-               Area = subset(i)
-               Call calcAll(pr0, Area, year)
+               area = subset(i)
+               Call calcAll(pr0, area, year)
             Next i
             
     ElseIf eff > ETleft And ETleft > 0 And Nopen > 1 Then
@@ -632,10 +632,10 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
         ReDim fishedareas(Nfishedareas)
         ii = 0
         For i_area = 1 To j - 1 'collect from all fished areas those that have not reached their region TAC
-            Area = orderedareas(i_area)
-            If (ClosedAreaTmp(Area) = False) Then
+            area = orderedareas(i_area)
+            If (ClosedAreaTmp(area) = False) Then
                  ii = ii + 1
-                 fishedareas(ii) = Area
+                 fishedareas(ii) = area
             End If
         Next i_area
         
@@ -644,8 +644,8 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
         pr0 = calcPr0ET(pr0region(i_rr), fishedareas, Nfishedareas, ETleft)
         'these areas remain open because they are bound by effort, not TAC
         For i_area = 1 To Nfishedareas
-           Area = fishedareas(i_area)
-           Call calcAll(pr0, Area, year)
+           area = fishedareas(i_area)
+           Call calcAll(pr0, area, year)
         Next i_area
     Else  'nopen > 1 and ETleft not exceeded after completing loop means that j = npops
           'and the nopen regions that have not reached their TAC can be fished at a lower pro
@@ -663,11 +663,11 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
         Nfishedareas = 0
    
         For i_area = 1 To npops  'collect from all fished areas those that have not reached their region TAC
-            Area = orderedareas(i_area)
-            If (ClosedAreaTmp(Area) = False) Then
+            area = orderedareas(i_area)
+            If (ClosedAreaTmp(area) = False) Then
                  Nfishedareas = Nfishedareas + 1
                  ReDim Preserve fishedareas(Nfishedareas)
-                 fishedareas(Nfishedareas) = Area
+                 fishedareas(Nfishedareas) = area
             End If
         Next i_area
         
@@ -708,9 +708,9 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
               rr = IDopenregion(i_rr)
               For i_area = 1 To Nareas_region(rr)
                  
-                 Area = Candidate_areas(rr, i_area)
+                 area = Candidate_areas(rr, i_area)
                 
-                 Call calcAll(pr0min, Area, year)
+                 Call calcAll(pr0min, area, year)
               
               Next i_area
            Next i_rr
@@ -731,10 +731,10 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
               ClosedRegionTmp(rr) = True
                 
               For i_area = 1 To Nareas_region(rr)
-                 Area = Candidate_areas(rr, i_area)
-                 ClosedAreaTmp(Area) = True
-                 Call calcAll(pr0, Area, year)
-                 ETleft = ETleft - EffortTmp(Area)
+                 area = Candidate_areas(rr, i_area)
+                 ClosedAreaTmp(area) = True
+                 Call calcAll(pr0, area, year)
+                 ETleft = ETleft - EffortTmp(area)
               Next i_area
           Next i_rr
           
@@ -750,8 +750,8 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
              For i_rr2 = i_rr To Nopen
                 rr = IDopenregion(i_rr2)
                 For i_area = 1 To Nareas_region(i_rr2)
-                    Area = Candidate_areas(rr, i_area)
-                    eff = eff + getE(pr0, Area)
+                    area = Candidate_areas(rr, i_area)
+                    eff = eff + getE(pr0, area)
                 Next i_area
              Next i_rr2
            
@@ -760,10 +760,10 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
                 ClosedRegionTmp(rr) = True
                 
                 For i_area = 1 To Nareas_region(rr)
-                   Area = Candidate_areas(rr, i_area)
-                   ClosedAreaTmp(Area) = True
-                   Call calcAll(pr0, Area, year)
-                   ETleft = ETleft - EffortTmp(Area)
+                   area = Candidate_areas(rr, i_area)
+                   ClosedAreaTmp(area) = True
+                   Call calcAll(pr0, area, year)
+                   ETleft = ETleft - EffortTmp(area)
                 Next i_area
               
              Else 'all remaining regions bound by ETleft
@@ -774,10 +774,10 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
                 For i_rr2 = region1 To Nopen
                    rr = IDopenregion(i_rr2)
                    For i_area = 1 To Nareas_region(rr)
-                       Area = Candidate_areas(rr, i_area)
+                       area = Candidate_areas(rr, i_area)
                        Nfishedareas = Nfishedareas + 1
                        ReDim Preserve fishedareas(Nfishedareas)
-                       fishedareas(Nfishedareas) = Area
+                       fishedareas(Nfishedareas) = area
                    Next i_area
                 Next i_rr2
                
@@ -786,8 +786,8 @@ Sub EqualizePopsTACregion(orderedareas, profit, npops, Nopenregions, IDopenregio
                 For i_rr2 = region1 To Nopen
                    rr = IDopenregion(i_rr2)
                    For i_area = 1 To Nareas_region(rr)
-                       Area = Candidate_areas(rr, i_area)
-                       Call calcAll(pr0, Area, year)
+                       area = Candidate_areas(rr, i_area)
+                       Call calcAll(pr0, area, year)
                    Next i_area
                 Next i_rr2
                 Exit For
@@ -821,14 +821,14 @@ For i = 0 To 99
  
  'Extraer parámetros específicos de área y calcular esfuerzos, derivadas del esfuerzo, y sumatorios
    For i_area = 1 To Nfishedareas
-      Area = sortedfishedareas(i_area)
-      Ninitial = BvulTmp(Area)
-      proci = pr0 + cost(Area)
+      area = sortedfishedareas(i_area)
+      Ninitial = BvulTmp(area)
+      proci = pr0 + cost(area)
       tmp = (1 - handling * proci / price)
 '       Nfin = proci / (price * q(Area) - q(Area) * handling * proci)
-      Nfin = proci / (price * q(Area) * tmp)
-      sumE = sumE + handling * (Ninitial - Nfin) - Log(Nfin / Ninitial) / q(Area)
-      sumdE = sumdE + 1 / (q(Area) * proci * tmp ^ 2)
+      Nfin = proci / (price * q(area) * tmp)
+      sumE = sumE + handling * (Ninitial - Nfin) - Log(Nfin / Ninitial) / q(area)
+      sumdE = sumdE + 1 / (q(area) * proci * tmp ^ 2)
    Next i_area
     'Nuevo valor de pr0 estimado
    pr0 = pr0old - (ET - sumE) / sumdE
@@ -861,11 +861,11 @@ For i = 0 To 99
    sumdf = 0
    
    For i_area = 1 To Nfishedareas
-     Area = sortedfishedareas(i_area)
-     proci = pr0 + cost(Area)
+     area = sortedfishedareas(i_area)
+     proci = pr0 + cost(area)
      tmp = (1 - handling * proci / price)
-     Nfin = proci / (price * q(Area) * tmp)
-     sumcat = sumcat + BvulTmp(Area) - Nfin
+     Nfin = proci / (price * q(area) * tmp)
+     sumcat = sumcat + BvulTmp(area) - Nfin
    ' df = 1 / (q(Area) * price * (1 - handling * proci / price) ^ 2)
      sumdf = sumdf + Nfin / (proci * tmp)
    Next i_area
@@ -907,16 +907,16 @@ For i = 0 To 99
    sumdf = 0
    sumdE = 0
    For i_area = 1 To Nfishedareas
-     Area = sortedfishedareas(i_area)
-     proci = pr0 + cost(Area)
+     area = sortedfishedareas(i_area)
+     proci = pr0 + cost(area)
      tmp = (1 - handling * proci / price)
-     Nfin = proci / (price * q(Area) * tmp)
-     Ninitial = BvulTmp(Area)
+     Nfin = proci / (price * q(area) * tmp)
+     Ninitial = BvulTmp(area)
      sumcat = sumcat + Ninitial - Nfin
    ' df = 1 / (q(Area) * price * (1 - handling * proci / price) ^ 2)
      sumdf = sumdf + Nfin / (proci * tmp)
-     sumE = sumE + handling * (Ninitial - Nfin) - Log(Nfin / Ninitial) / q(Area)
-     sumdE = sumdE + 1 / (q(Area) * proci * tmp ^ 2)
+     sumE = sumE + handling * (Ninitial - Nfin) - Log(Nfin / Ninitial) / q(area)
+     sumdE = sumdE + 1 / (q(area) * proci * tmp ^ 2)
    
    Next i_area
  
@@ -941,42 +941,42 @@ calcPr0TACandET = pr0
 
 End Function
 
-Function getE(pr0, Area)
+Function getE(pr0, area)
   
   Dim E As Double
-  Dim n As Double
+  Dim N As Double
   
-    n = getN(pr0, Area)
+    N = getN(pr0, area)
     
-    E = handling * (BvulTmp(Area) - n) - Log(n / BvulTmp(Area)) / q(Area)
+    E = handling * (BvulTmp(area) - N) - Log(N / BvulTmp(area)) / q(area)
     If E < 0 Then 'Si el esfuerzo es negativo pasa a 0
         E = 0
     End If
     getE = E
 End Function
 
-Function getN(pr0, Area)
- Dim n As Double
+Function getN(pr0, area)
+ Dim N As Double
  Dim proci As Double
 
-    proci = pr0 + cost(Area)
-        n = proci / (price * q(Area) - q(Area) * handling * proci)
-    getN = n
+    proci = pr0 + cost(area)
+        N = proci / (price * q(area) - q(area) * handling * proci)
+    getN = N
 End Function
-Sub calcAll(pr0, Area, year)
+Sub calcAll(pr0, area, year)
  Dim proci As Double
  Dim Ninitial As Double
  Dim rr As Integer
  
-    rr = Region(Area)
-    proci = pr0 + cost(Area)
-    Ninitial = BvulTmp(Area)
-    BvulTmp(Area) = proci / (price * q(Area) - q(Area) * handling * proci)
-    HRTmp(Area) = (1 - BvulTmp(Area) / Ninitial)
-    CatchTmp(Area) = Ninitial - BvulTmp(Area)
-    EffortTmp(Area) = handling * CatchTmp(Area) - Log(BvulTmp(Area) / Ninitial) / q(Area)
-    Catch(year, Area) = Catch(year, Area) + CatchTmp(Area)
-    AnnualCatch(rr) = AnnualCatch(rr) + CatchTmp(Area)
-    effort(year, Area) = effort(year, Area) + EffortTmp(Area)
+    rr = Region(area)
+    proci = pr0 + cost(area)
+    Ninitial = BvulTmp(area)
+    BvulTmp(area) = proci / (price * q(area) - q(area) * handling * proci)
+    HRTmp(area) = (1 - BvulTmp(area) / Ninitial)
+    CatchTmp(area) = Ninitial - BvulTmp(area)
+    EffortTmp(area) = handling * CatchTmp(area) - Log(BvulTmp(area) / Ninitial) / q(area)
+    Catch(year, area) = Catch(year, area) + CatchTmp(area)
+    AnnualCatch(rr) = AnnualCatch(rr) + CatchTmp(area)
+    effort(year, area) = effort(year, area) + EffortTmp(area)
        
 End Sub

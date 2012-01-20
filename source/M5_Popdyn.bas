@@ -3,7 +3,7 @@ Option Explicit
 Option Base 0
 
 'Declare indices
-Dim age As Integer, year As Integer, Area As Integer, TEMP As Double, ilen As Integer, i As Integer, Lplus As Double, _
+Dim age As Integer, year As Integer, area As Integer, TEMP As Double, ilen As Integer, i As Integer, Lplus As Double, _
 ilenplus As Integer
 Dim XtraM() As Double, Wvul As Double, pLageplusTmp(), ZZ As Double, cumZZ As Double, sum_pLage As Double
 
@@ -11,25 +11,25 @@ Sub PopDyn(year)
 
    ReDim XtraM(Nareas), pLageplusTmp(Nilens)
    
-   For Area = 1 To Nareas
+   For area = 1 To Nareas
           
-      XtraM(Area) = 0
+      XtraM(area) = 0
           
       Select Case RunFlags.Growth_type
         Case 1
             'Density-independent growth
-                g(Area) = 1
+                g(area) = 1
             
         Case 2
             'Lineal density dependence
                                 
-            If BtotTmp(Area) < Bthreshold(Area) Then
-                g(Area) = 1
+            If BtotTmp(area) < Bthreshold(area) Then
+                g(area) = 1
                 
-            ElseIf BtotTmp(Area) > (Bg0(Area)) Then
-                g(Area) = 0
+            ElseIf BtotTmp(area) > (Bg0(area)) Then
+                g(area) = 0
             Else
-                g(Area) = 1 - ((1 - gk(Area)) / (Kcarga(Area) - Bthreshold(Area)) * (BtotTmp(Area) - Bthreshold(Area)))
+                g(area) = 1 - ((1 - gk(area)) / (Kcarga(area) - Bthreshold(area)) * (BtotTmp(area) - Bthreshold(area)))
             End If
                     
             'Debug.Print g(area)
@@ -37,55 +37,55 @@ Sub PopDyn(year)
                     
       End Select
         
-      Alpha(Area) = (1 - Rho(Area)) * Linf(Area) * g(Area)
-      Beta(Area) = 1 - (1 - Rho(Area)) * g(Area)
+      Alpha(area) = (1 - Rho(area)) * Linf(area) * g(area)
+      Beta(area) = 1 - (1 - Rho(area)) * g(area)
   
       For age = Stage To AgePlus - 1
              
-         If Flag_Rec_Fish(Area, age) < 3 Then    'age not fully recruited
-             ZZ = (Lfull(Area) - muTmp(Area, age)) / sdTmp(Area, age)
+         If flag_Partial_Rec(area, age) < 3 Then    'age not fully recruited
+             ZZ = (Lfull(area) - muTmp(area, age)) / sdTmp(area, age)
              cumZZ = 1 - Cumd_Norm(ZZ)
             
              If (cumZZ > 0.02 And cumZZ < 0.98) Then
-                   Flag_Rec_Fish(Area, age) = 2
+                   flag_Partial_Rec(area, age) = 2
              ElseIf cumZZ > 0.98 Then
-                   Flag_Rec_Fish(Area, age) = 3
+                   flag_Partial_Rec(area, age) = 3
              End If
         
          End If
     
-         If HRTmp(Area) > 0 Then
+         If HRTmp(area) > 0 Then
     
-             If Flag_Rec_Fish(Area, age) = 2 Then    'age partially recruited
-                For i = 1 To Nfracs(Area, age)
-                   frac(Area, age, i + 1) = frac(Area, age, i) * (1 - HRTmp(Area))
-                   Z(Area, age, i + 1) = Z(Area, age, i)
+             If flag_Partial_Rec(area, age) = 2 Then    'age partially recruited
+                For i = 1 To Nfracs(area, age)
+                   frac(area, age, i + 1) = frac(area, age, i) * (1 - HRTmp(area))
+                   Z(area, age, i + 1) = Z(area, age, i)
                 Next i
-                frac(Area, age, 1) = (1 - HRTmp(Area))
-                Z(Area, age, 1) = ZZ
-                Nfracs(Area, age) = Nfracs(Area, age) + 1
+                frac(area, age, 1) = (1 - HRTmp(area))
+                Z(area, age, 1) = ZZ
+                Nfracs(area, age) = Nfracs(area, age) + 1
              End If
             
 ''''''NOW THEY GROW AND DIE
-             NTmp(Area, age) = NTmp(Area, age) * Exp(-(M(Area))) * (1 - HRTmp(Area) * FracSel(Area, age))
+             NTmp(area, age) = NTmp(area, age) * Exp(-(M(area))) * (1 - HRTmp(area) * FracSel(area, age))
                                
          Else ' HRTmp = 0
                    
-              NTmp(Area, age) = NTmp(Area, age) * Exp(-(M(Area)))
+              NTmp(area, age) = NTmp(area, age) * Exp(-(M(area)))
                 
          End If
            
-         muTmp(Area, age) = Alpha(Area) + Beta(Area) * muTmp(Area, age)
-         sdTmp(Area, age) = CVmu(Area) * muTmp(Area, age)
+         muTmp(area, age) = Alpha(area) + Beta(area) * muTmp(area, age)
+         sdTmp(area, age) = CVmu(area) * muTmp(area, age)
                                   
 ''Debug.Print muTmp(Area, age)
-         Select Case Flag_Rec_Fish(Area, age)
+         Select Case flag_Partial_Rec(area, age)
              Case 1   'Not recruited
-                 Call M8_Library.Norm(Area, age)
+                 Call M8_Library.Norm(area, age)
              Case 2 'Partially recruited
-                 Call M8_Library.Trunc_Norm(Area, age)
+                 Call M8_Library.Trunc_Norm(area, age)
              Case 3 'Fully recruited
-                 Call M8_Library.Trunc_Norm(Area, age)
+                 Call M8_Library.Trunc_Norm(area, age)
          End Select
         
       Next age
@@ -94,8 +94,8 @@ Sub PopDyn(year)
      ' equal to pLAgeplus
              
       'size-selective fishing
-      For ilen = iLfull(Area) To Nilens
-         pLageplus(Area, ilen) = (1 - HRTmp(Area)) * pLageplus(Area, ilen)
+      For ilen = iLfull(area) To Nilens
+         pLageplus(area, ilen) = (1 - HRTmp(area)) * pLageplus(area, ilen)
       Next ilen
                                        ' NB: no need to integrate until after growth takes place
       'growth
@@ -105,16 +105,16 @@ Sub PopDyn(year)
       Next ilen
                     
       ilen = 1
-      While l(ilen) < Linf(Area) And ilen < Nilens
-         Lplus = Alpha(Area) + Beta(Area) * (l(ilen) + 0 * Linc) 'l(ilen) is the center of interval
+      While l(ilen) < Linf(area) And ilen < Nilens
+         Lplus = Alpha(area) + Beta(area) * (l(ilen) + 0 * Linc) 'l(ilen) is the center of interval
          ilenplus = 1 + (Lplus - L1) / Linc     'this rounds the number (doesn't truncate)
          If (ilenplus > Nilens) Then ilenplus = Nilens
-         pLageplusTmp(ilenplus) = pLageplusTmp(ilenplus) + pLageplus(Area, ilen)
+         pLageplusTmp(ilenplus) = pLageplusTmp(ilenplus) + pLageplus(area, ilen)
          ilen = ilen + 1
       Wend
             
       For i = ilen To Nilens       'NB! these are for l(ilen) >= Linf
-          pLageplusTmp(i) = pLageplusTmp(i) + pLageplus(Area, i)
+          pLageplusTmp(i) = pLageplusTmp(i) + pLageplus(area, i)
       Next i
             
         ' now normalize
@@ -125,59 +125,59 @@ Sub PopDyn(year)
             
       For ilen = 1 To Nilens
                                 
-          pLageplus(Area, ilen) = pLageplusTmp(ilen) / TEMP
-          pLage(Area, AgePlus, ilen) = pLageplus(Area, ilen)
+          pLageplus(area, ilen) = pLageplusTmp(ilen) / TEMP
+          pLage(area, AgePlus, ilen) = pLageplus(area, ilen)
                       
       Next ilen
                                    
-      NTmp(Area, AgePlus) = NTmp(Area, AgePlus) * Exp(-(M(Area))) * (1 - HRTmp(Area) * FracSel(Area, AgePlus))
+      NTmp(area, AgePlus) = NTmp(area, AgePlus) * Exp(-(M(area))) * (1 - HRTmp(area) * FracSel(area, AgePlus))
         
       'Now compute FracSel, weights and biomasses for next period
-      If Flag_Rec_Fish(Area, age) < 3 Then
+      If flag_Partial_Rec(area, age) < 3 Then
           For age = Stage To AgePlus
-             FracSel(Area, age) = 0
-             For ilen = iLfull(Area) To Nilens
-                FracSel(Area, age) = FracSel(Area, age) + pLage(Area, age, ilen)
+             FracSel(area, age) = 0
+             For ilen = iLfull(area) To Nilens
+                FracSel(area, age) = FracSel(area, age) + pLage(area, age, ilen)
              Next ilen
           Next age
       End If
           
-      BtotTmp(Area) = 0
-      BvulTmp(Area) = 0
+      BtotTmp(area) = 0
+      BvulTmp(area) = 0
         
       For age = Stage To AgePlus
        
-         WTmp(Area, age) = 0
+         WTmp(area, age) = 0
          For ilen = 1 To Nilens
-             WTmp(Area, age) = WTmp(Area, age) + W_L(Area, ilen) * pLage(Area, age, ilen)
+             WTmp(area, age) = WTmp(area, age) + W_L(area, ilen) * pLage(area, age, ilen)
          Next ilen
                         
          Wvul = 0
-         For ilen = iLfull(Area) To Nilens
-             Wvul = Wvul + W_L(Area, ilen) * pLage(Area, age, ilen)
+         For ilen = iLfull(area) To Nilens
+             Wvul = Wvul + W_L(area, ilen) * pLage(area, age, ilen)
          Next ilen
         
-         BtotTmp(Area) = BtotTmp(Area) + NTmp(Area, age) * WTmp(Area, age)
-         BvulTmp(Area) = BvulTmp(Area) + NTmp(Area, age) * Wvul * FracSel(Area, age)
+         BtotTmp(area) = BtotTmp(area) + NTmp(area, age) * WTmp(area, age)
+         BvulTmp(area) = BvulTmp(area) + NTmp(area, age) * Wvul * FracSel(area, age)
       
       Next age
          
       'apply extra mortality if Btotal exceeded carrying capacity
         
-      Kcarga_adults(Area) = Kcarga(Area) - R0(Area) * w(StYear, Area, Stage)
+      Kcarga_adults(area) = Kcarga(area) - R0(area) * w(StYear, area, Stage)
         
-      If (BtotTmp(Area) > Kcarga_adults(Area)) Then
-          XtraM(Area) = Kcarga_adults(Area) / BtotTmp(Area)
-          BtotTmp(Area) = BtotTmp(Area) * XtraM(Area)
-          BvulTmp(Area) = BvulTmp(Area) * XtraM(Area)
+      If (BtotTmp(area) > Kcarga_adults(area)) Then
+          XtraM(area) = Kcarga_adults(area) / BtotTmp(area)
+          BtotTmp(area) = BtotTmp(area) * XtraM(area)
+          BvulTmp(area) = BvulTmp(area) * XtraM(area)
             
           For age = Stage To AgePlus
-              NTmp(Area, age) = NTmp(Area, age) * XtraM(Area)
+              NTmp(area, age) = NTmp(area, age) * XtraM(area)
           Next age
         
       End If
        'Debug.Print BvulTmp(area)
-   Next Area
+   Next area
 
 End Sub
 

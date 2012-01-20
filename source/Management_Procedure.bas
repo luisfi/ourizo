@@ -1,114 +1,118 @@
 Attribute VB_Name = "Management_Procedure"
 Dim ExpectedCatch As Double, FishedSurface As Double
 Dim Nfishedareas As Integer, AtlasALL As Double, rr As Integer, i_area As Integer, i_survey
-Dim Reopen As Boolean, HasReOpenConditions As Boolean, ShortenPeriod As Boolean, tempbio As Double
+Dim reopen As Boolean, HasReOpenConditions As Boolean, ShortenPeriod As Boolean, tempbio As Double
 
-Sub DoSurvey(year, Area)
+Sub DoSurvey(year, area)
 Attribute DoSurvey.VB_ProcData.VB_Invoke_Func = " \n14"
 
 'Van al input
 
   For i_survey = 1 To Nsurveys
-                ' Para las geoducks tambien un error de misespeficicacion por asumir que las areas no survey estan igual que cuando surveyed (solo _
+    ' Para las geoducks tambien un error de misespeficicacion por asumir que las areas no survey estan igual que cuando surveyed (solo _
     una fraccion es surveyed each year con el supuesto que las otras areas presurveyed no cambian entre surveys excepto por pesca)
     iz = iz + 1
-    SurveyBvul(i_survey, year, Area) = Bvulnerable(year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
-    SurveyBtot(i_survey, year, Area) = Btotal(year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
-    ' Aqui aun no esta calculada Bmature(year, Area), así que la comentamos:
-    ' SurveyMat(i_survey, year, Area) = Bmature(year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
-    SurveyNtot(i_survey, year, Area) = 0
+    'SurveyBvul(i_survey, year, Area) = Bvulnerable(year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
+    'SurveyBtot(i_survey, year, Area) = Btotal(year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
+    
+    SurveyNtot(i_survey, year, area) = 0
+    SurveyBvul(i_survey, year, area) = 0
+    SurveyBtot(i_survey, year, area) = 0
+    
     For age = 1 To Nages
-        SurveyNtot(i_survey, year, Area) = SurveyNtot(i_survey, year, Area) + N(year, Area, age)
+        SurveyNtot(i_survey, year, area) = SurveyNtot(i_survey, year, area) + N(year, area, age)
     Next age
-    SurveyNtot(i_survey, year, Area) = SurveyNtot(i_survey, year, Area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
-    SurveyAll(year) = SurveyAll(year) + SurveyBvul(i_survey, year, Area)
+    SurveyNtot(i_survey, year, area) = SurveyNtot(i_survey, year, area) * Exp(Zvector(iz) * SurveyCV - 0.5 * SurveyCV ^ 2)
             
-     If pLopt Then
+     If sample_size_pL > 0 Then
      
      Dim temppL() As Double
      ReDim temppL(1 To Nilens)
    
          For i = 1 To Nilens
-             temppL(i) = pL(year, Area, i)
+             temppL(i) = pL(year, area, i)
          Next i
-           tempSurveypL = rmultinom(Int(SurveyNtot(i_survey, year, Area)), l, temppL)
+         
+         tempSurveypL = rmultinom(sample_size_pL, l, temppL)
+         
          For i = 1 To Nilens
-             SurveypL(i_survey, year, Area, i) = tempSurveypL(i)
+             SurveypL(i_survey, year, area, i) = tempSurveypL(i)
+             SurveyBtot(i_survey, year, area) = SurveyBtot(i_survey, year, area) + SurveyNtot(i_survey, year, area) * SurveypL(i_survey, year, area, i) * W_L(area, i)
+             If l(i) >= Lfull(area) Then SurveyBvul(i_survey, year, area) = SurveyBvul(i_survey, year, area) + SurveyNtot(i_survey, year, area) * SurveypL(i_survey, year, area, i) * W_L(area, i)
          Next i
-    
      
      End If
 
   Next i_survey
 
 End Sub
-Sub CheckOpenConditions(year, Area)
+Sub CheckOpenConditions(year, area)
 
-               Reopen = True ' Set to True by default (as to not affect And Statement)
+               'Reopen = True ' Set to True by default (as to not affect And Statement)
                HasReOpenConditions = False 'Set to False by Default
                ShortenPeriod = True 'Set to True by default (as to not affect And Statement)
                
                If ReOpenConditionFlag Then 'If there are ReOpenConditions to be evaluated
                  
                 'Virgin vulnerable biomass fraction
-                 If RCVirginBiomass_Fraction(Area) <> 0 Then 'If There are Virgin Fractions set (different from 0)
+                 If RCVirginBiomass_Fraction(area) <> 0 Then 'If There are Virgin Fractions set (different from 0)
                     HasReOpenConditions = True
-                       ReOpenConditionValues(1, Area) = SurveyBvul(1, year, Area) / RCVirginBiomass_Fraction(Area) * VBvirgin(Area)
-                       Reopen = Reopen And (ReOpenConditionValues(1, Area) >= 1)
+                       ReOpenConditionValues(1, area) = SurveyBvul(1, year, area) / (RCVirginBiomass_Fraction(area) * VBvirgin(area))
+                       reopen = reopen And (ReOpenConditionValues(1, area) >= 1)
                        If AdaptativeRotationFlag Then
-                        ShortenPeriod = ShortenPeriod And (ReOpenConditionValues(1, Area) >= 1 + 1 * RCVirginBiomass_Tolerance(Area))
+                        ShortenPeriod = ShortenPeriod And (ReOpenConditionValues(1, area) >= 1 + RCVirginBiomass_Tolerance(area))
                        End If
                  Else 'If Preharvest Fractions set to zero (not set)
-                    ReOpenConditionValues(1, Area) = 0
+                    ReOpenConditionValues(1, area) = 0
                  End If
                 'Preharvest vulnerable biomass fraction
-                 If RCPreharvestBiomass_Fraction(Area) <> 0 Then
+                 If RCPreharvestBiomass_Fraction(area) <> 0 Then
                    HasReOpenConditions = True
-                   If (StYear <= year - RestingTime(Area)) Then 'If it has been harvested before in the simulation: check reopening condition.
-                     ReOpenConditionValues(2, Area) = SurveyBvul(1, year, Area) / RCPreharvestBiomass_Fraction(Area) * SurveyBvul(1, year - RestingTime(Area), Area)
-                     Reopen = Reopen And (ReOpenConditionValues(2, Area) >= 1) 'Close area if reopening condition is not met.
+                   If (year - RestingTime(area) >= StYear) Then 'If it has been harvested before in the simulation: check reopening condition.
+                     ReOpenConditionValues(2, area) = SurveyBvul(1, year, area) / (RCPreharvestBiomass_Fraction(area) * SurveyBvul(1, year - RestingTime(area), area))
+                     reopen = reopen And (ReOpenConditionValues(2, area) >= 1) 'Close area if reopening condition is not met.
                      If AdaptativeRotationFlag Then
-                       ShortenPeriod = ShortenPeriod And (ReOpenConditionValues(2, Area) >= 1 + 1 * RCPreharvestBiomass_Tolerance(Area))
+                       ShortenPeriod = ShortenPeriod And (ReOpenConditionValues(2, area) >= 1 + RCPreharvestBiomass_Tolerance(area))
                      End If
                    End If
                  Else 'If Preharvest Fractions set to zero (not set)
-                    ReOpenConditionValues(2, Area) = 0
+                    ReOpenConditionValues(2, area) = 0
                  End If
                 'Minimum density threshold of individuals above the legal size
-                 If RCMinimumDensity(Area) <> 0 Then 'If There are Minimum Density thresholds set (different from 0)
+                 If RCMinimumDensity(area) <> 0 Then 'If There are Minimum Density thresholds set (different from 0)
                     HasReOpenConditions = True
-                       j = l(Nilens)
+                       j = Nilens
                        Dim temppL As Double
                        temppL = 0
-                       Do While j >= Lfull(Area)
-                         temppL = SurveypL(1, year, Area, j) + temppL
-                       j = j - Linc
+                       Do While l(j) >= Lfull(area)
+                         temppL = SurveypL(1, year, area, j) + temppL
+                       j = j - 1
                        Loop
-                       ReOpenConditionValues(3, Area) = temppL * SurveyNtot(1, year, Area) / Surface(Area) / RCMinimumDensity(Area)
-                       Reopen = Reopen And (ReOpenConditionValues(3, Area) >= 1)
+                       ReOpenConditionValues(3, area) = (temppL * SurveyNtot(1, year, area) / Surface(area)) / RCMinimumDensity(area)
+                       reopen = reopen And (ReOpenConditionValues(3, area) >= 1)
                        If AdaptativeRotationFlag Then
-                        ShortenPeriod = ShortenPeriod And (ReOpenConditionValues(3, Area) >= 1 + 1 * RCMinimumDensity_Tolerance(Area))
+                         ShortenPeriod = ShortenPeriod And (ReOpenConditionValues(3, area) >= 1 + RCMinimumDensity_Tolerance(area))
                        End If
                  Else 'If Preharvest Fractions set to zero (not set)
-                    ReOpenConditionValues(3, Area) = 0
+                    ReOpenConditionValues(3, area) = 0
                  End If
                 
                 '%Biomass greater than XSize
-                If RCGreaterSize_Fraction(Area) <> 0 Then 'If There are Fraction of Biomass greater than X in size thresholds set (different from 0)
+                If RCGreaterSize_Fraction(area) <> 0 Then 'If There are Fraction of Biomass greater than X in size thresholds set (different from 0)
                     HasReOpenConditions = True
                     tempbio = 0
-                    For ilen = Int((RCGreaterSize_Size(Area) - L1) / Linc + 1) To Nilens
-                    tempbio = SurveyNtot(1, year, Area) * SurveypL(1, year, Area, ilen) + tempbio 'Number of individuals of size greater than X
+                    For ilen = Int((RCGreaterSize_Size(area) - L1) / Linc + 1) To Nilens
+                    tempbio = SurveyNtot(1, year, area) * SurveypL(1, year, area, ilen) + tempbio 'Number of individuals of size greater than X
                     Next ilen
-                       ReOpenConditionValues(4, Area) = tempbio / SurveyNtot(1, year, Area) / RCGreaterSize_Fraction(Area)
-                       Reopen = Reopen And (ReOpenConditionValues(4, Area) >= 1)
+                       ReOpenConditionValues(4, area) = tempbio / SurveyNtot(1, year, area) / RCGreaterSize_Fraction(area)
+                       reopen = reopen And (ReOpenConditionValues(4, area) >= 1)
                        If AdaptativeRotationFlag Then
-                        ShortenPeriod = ShortenPeriod And (ReOpenConditionValues(4, Area) >= 1 + 1 * RCGreaterSize_Tolerance(Area))
+                        ShortenPeriod = ShortenPeriod And (ReOpenConditionValues(4, area) >= 1 + 1 * RCGreaterSize_Tolerance(area))
                        End If
                  Else 'If Preharvest Fractions set to zero (not set)
-                    ReOpenConditionValues(4, Area) = 0
+                    ReOpenConditionValues(4, area) = 0
                  End If
-                 
+              
                'End Reopening Conditions
                End If
                
@@ -124,9 +128,9 @@ Attribute Strategies.VB_ProcData.VB_Invoke_Func = " \n14"
     Case 1     'ROTATION
     'Todo lo ANUAL que cierra y abre areas va a aca. y pasa a fishing un tmp que dice que areas van a ser pescadas.
 
-        For Area = 1 To Nareas
-            ClosedArea(year, Area) = True
-        Next Area
+        For area = 1 To Nareas
+            ClosedArea(year, area) = True
+        Next area
         
       Select Case RunFlags.RotationType
             
@@ -135,15 +139,14 @@ Attribute Strategies.VB_ProcData.VB_Invoke_Func = " \n14"
         If Feedback = True Then
             If PartialSurveyFlag = True Then
                 AtlasALL = 0
-                For Area = 1 To Nareas
-                    AtlasALL = AtlasALL + Atlas(Area)
-                Next Area
+                For area = 1 To Nareas
+                    AtlasALL = AtlasALL + Atlas(area)
+                Next area
                 TAC(year) = AtlasALL * TargetHR
             Else
-                For Area = 1 To Nareas
-                    Call DoSurvey(year, Area)
-                Next Area
-                TAC(year) = SurveyAll(year) * TargetHR
+                For area = 1 To Nareas
+                    Call DoSurvey(year, area)
+                Next area
             End If
         End If
                          
@@ -152,34 +155,35 @@ Attribute Strategies.VB_ProcData.VB_Invoke_Func = " \n14"
           Do While (Nfishedareas <= Nareas) 'NB! it can enter these loops more than once until condition is satisfied
              For rr = 1 To Nregions
                 For i = 1 To Nareas_region(rr)
-                   Area = Candidate_areas(rr, i)
+                   area = Candidate_areas(rr, i)
                         
                    If PartialSurveyFlag = True Then
                       iz = iz + 1
-                      Call DoSurvey(year, Area)
-                      Atlas(Area) = SurveyBvul(1, year, Area)
+                      Call DoSurvey(year, area)
+                      Atlas(area) = SurveyBvul(1, year, area)
                    End If
                    
-                   Call CheckOpenConditions(year, Area)
-                        
-                   If (ReOpenConditionFlag = False) Or (ReOpenConditionFlag = True And Reopen) Then
+                   reopen = True
+                   If ReOpenConditionFlag = True Then Call CheckOpenConditions(year, area)
+                  
+                   If reopen Then
                    
-                      ClosedArea(year, Area) = False
+                      ClosedArea(year, area) = False
    
                       Nfishedareas = Nfishedareas + 1
-                      ExpectedCatch = ExpectedCatch + SurveyBvul(1, year, Area) * PulseHR 'podriamos querer reemplazar PulseHR como una densidad umbral como fraccion de capacidad de Carga
+                      ExpectedCatch = ExpectedCatch + SurveyBvul(1, year, area) * PulseHR 'podriamos querer reemplazar PulseHR como una densidad umbral como fraccion de capacidad de Carga
                                                        
                       For j = i To Nareas_region(rr) - 1
                           Candidate_areas(rr, j) = Candidate_areas(rr, j + 1)
                       Next j
                       
-                      Candidate_areas(rr, Nareas_region(rr)) = Area
+                      Candidate_areas(rr, Nareas_region(rr)) = area 'Put opened area at the bottom of vector
                                                         
                       Exit For 'go to next region
                                                
                    End If
                         
-                Next i
+                Next i 'Area within region
                 
                 If (ExpectedCatch >= 0.95 * TAC(year)) Then Exit Do
              Next rr
@@ -202,20 +206,21 @@ Attribute Strategies.VB_ProcData.VB_Invoke_Func = " \n14"
          Do While (FishedSurface < TargetSurface) And (Nfishedareas <= Nareas)
             For rr = 1 To Nregions
                For i = 1 To Nareas_region(rr)
-                  Area = Candidate_areas(rr, i)
+                  area = Candidate_areas(rr, i)
                   
-                  Call DoSurvey(year, Area)
-                  Call CheckOpenConditions(year, Area)
+                  Call DoSurvey(year, area)
+                  reopen = True
+                  If ReOpenConditionFlag = True Then Call CheckOpenConditions(year, area)
                   
-                  If (ReOpenConditionFlag = False) Or (ReOpenConditionFlag = True And Reopen) Then '(SurveyBvul(1, year, Area) >= RCPreharvestBiomass_Fraction(Area) * VBvirgin(Area)) Then
+                  If (reopen) Then
                     
-                       ClosedArea(year, Area) = False
+                       ClosedArea(year, area) = False
                        Nfishedareas = Nfishedareas + 1
-                       FishedSurface = FishedSurface + Surface(Area)
+                       FishedSurface = FishedSurface + Surface(area)
                        For j = i To Nareas_region(rr) - 1
                              Candidate_areas(rr, j) = Candidate_areas(rr, j + 1)
                        Next j
-                       Candidate_areas(rr, Nareas_region(rr)) = Area
+                       Candidate_areas(rr, Nareas_region(rr)) = area
                        Exit For 'go to next region
                   End If
                Next i
@@ -228,58 +233,59 @@ Attribute Strategies.VB_ProcData.VB_Invoke_Func = " \n14"
       
          If Feedback = True Then
             If PartialSurveyFlag = True Then
-                For Area = 1 To Nareas
-                   If (RestingTime(Area) >= RotationPeriod(Area)) Then
-                    Call DoSurvey(year, Area)
+                For area = 1 To Nareas
+                   If (RestingTime(area) >= RotationPeriod(area)) Then
+                    Call DoSurvey(year, area)
                    End If
-                Next Area
+                Next area
             Else ' Survey all areas and compute TACs
-                For Area = 1 To Nareas
-                    Call DoSurvey(year, Area)
-                    TAC_area(year, Area) = SurveyBvul(1, year, Area) * PulseHR
-                Next Area
-                    TAC(year) = SurveyAll(year) * PulseHR
+                For area = 1 To Nareas
+                    Call DoSurvey(year, area)
+                    TAC_area(year, area) = SurveyBvul(1, year, area) * PulseHR
+                Next area
             End If
          End If
        
                    
             Nfishedareas = 0
-            For Area = 1 To Nareas
-            
-             Call CheckOpenConditions(year, Area)
-            
-             'Open area if RestingTime equals or exceeds rotation period and reopen conditions are met (when needed).
-             If (RestingTime(Area) >= RotationPeriod(Area)) And ((ReOpenConditionFlag = False) Or (ReOpenConditionFlag = True And Reopen)) Then
-                ClosedArea(year, Area) = False
-                Nfishedareas = Nfishedareas + 1
-                If HasReOpenConditions And ShortenPeriod And AdaptativeRotationFlag Then 'If there are ReOpenConditions and criteria for shortening rotation period is met
-                    RotationPeriod(Area) = RotationPeriod(Area) - 1 'Shorten rotation period
-                End If
-                RestingTime(Area) = 1 'Reset resting time
-             Else
-                If AdaptativeRotationFlag And (RestingTime(Area) >= RotationPeriod(Area)) Then
-                   RotationPeriod(Area) = RotationPeriod(Area) + 1
-                End If
-                RestingTime(Area) = RestingTime(Area) + 1
-             End If
-            Next Area
-          
-          
-                            
+            For area = 1 To Nareas
+              If (RestingTime(area) < RotationPeriod(area)) Then
+                 RestingTime(area) = RestingTime(area) + 1
+              Else 'Open area if RestingTime equals or exceeds rotation period and reopen conditions are met.
+                 reopen = True
+                 If ReOpenConditionFlag = True Then Call CheckOpenConditions(year, area)
+                 
+                 If reopen Then
+                    ClosedArea(year, area) = False
+                    Nfishedareas = Nfishedareas + 1
+                    If AdaptativeRotationFlag And ShortenPeriod Then  'If there are ReOpenConditions and criteria for shortening rotation period is met
+                       RotationPeriod(area) = RotationPeriod(area) - 1 'Shorten rotation period
+                    End If
+                    RestingTime(area) = 1 'Reset resting time
+                 Else ' Did not meet reopening conditions
+                    RestingTime(area) = RestingTime(area) + 1
+                    If AdaptativeRotationFlag Then RotationPeriod(area) = RotationPeriod(area) + 1
+                 End If
+              End If
+            Next area
+        
       End Select
+       
+    ' Print Rotational Output: monte no esta definido... Como se saca...
+    Call Input_Output.Print_Rotational_Output(year)
 
     Case 2    'AREA BY AREA MANAGEMENT - ANUAL
         
         If Feedback = True Then
            
-           For Area = 1 To Nareas
-            Call DoSurvey(year, Area)
-           Next Area
+           For area = 1 To Nareas
+            Call DoSurvey(year, area)
+           Next area
         
            If TAC_TAE_HR = 1 Then
-                For Area = 1 To Nareas
-                    TAC_area(year, Area) = SurveyBvul(1, year, Area) * TargetHR
-                Next Area
+                For area = 1 To Nareas
+                    TAC_area(year, area) = SurveyBvul(1, year, area) * TargetHR
+                Next area
            ElseIf TAC_TAE_HR = 2 Then
                 MsgBox ("For chosen MP you need to implement a feedback rule for effort to calculate TAE_area(Year,area)")
                 End   'or end?
@@ -289,16 +295,16 @@ Attribute Strategies.VB_ProcData.VB_Invoke_Func = " \n14"
     Case 3    'Management by region
       
         If Feedback = True Then
-            For Area = 1 To Nareas
-                Call DoSurvey(year, Area)
-            Next Area
+            For area = 1 To Nareas
+                Call DoSurvey(year, area)
+            Next area
            
             If TAC_TAE_HR = 1 Then
              
                     For rr = 1 To Nregions
                          For i_area = 1 To Nareas_region(rr)
-                             Area = Candidate_areas(rr, i_area)
-                             TAC_region(rr, year) = TAC_region(rr, year) + SurveyBvul(1, year, Area) * TargetHR
+                             area = Candidate_areas(rr, i_area)
+                             TAC_region(rr, year) = TAC_region(rr, year) + SurveyBvul(1, year, area) * TargetHR
                          Next i_area
                     Next rr
             
@@ -341,8 +347,8 @@ Attribute Strategies.VB_ProcData.VB_Invoke_Func = " \n14"
 
 'THIS NEEDS TO BE SET INDEPENDENT OF HARVESTING STRATEGY
 
-   For Area = 1 To Nareas
-       ClosedAreaTmp(Area) = ClosedArea(year, Area)
-   Next Area
+   For area = 1 To Nareas
+       ClosedAreaTmp(area) = ClosedArea(year, area)
+   Next area
 
 End Sub

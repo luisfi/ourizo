@@ -56,49 +56,49 @@ stm1:           v1 = 2# * Rnd - 1#
     normal = mean + gasdev * stdev
 End Function
 
-Sub Norm(Area, age)
+Sub Norm(area, age)
 Attribute Norm.VB_ProcData.VB_Invoke_Func = " \n14"
 
 Dim ilen As Integer, intfact As Double
     
-mu_tmp = muTmp(Area, age)
-sd_tmp = sdTmp(Area, age)
+mu_tmp = muTmp(area, age)
+sd_tmp = sdTmp(area, age)
 
 intfact = 0
 For ilen = 1 To Nilens
-    pLage(Area, age, ilen) = Exp(-0.5 * ((l(ilen) - mu_tmp) / sd_tmp) ^ 2)
-    intfact = intfact + pLage(Area, age, ilen)
+    pLage(area, age, ilen) = Exp(-0.5 * ((l(ilen) - mu_tmp) / sd_tmp) ^ 2)
+    intfact = intfact + pLage(area, age, ilen)
 Next
     
 For ilen = 1 To Nilens
-    pLage(Area, age, ilen) = pLage(Area, age, ilen) / intfact
+    pLage(area, age, ilen) = pLage(area, age, ilen) / intfact
 Next
 
 End Sub
 
-Sub Trunc_Norm(Area, age)
+Sub Trunc_Norm(area, age)
 Attribute Trunc_Norm.VB_ProcData.VB_Invoke_Func = " \n14"
 Dim ilen As Integer, ifrac As Integer, ilenlast As Integer
 Dim nextL As Double, intfact As Double
 
-mu_tmp = muTmp(Area, age)
-sd_tmp = sdTmp(Area, age)
+mu_tmp = muTmp(area, age)
+sd_tmp = sdTmp(area, age)
 
 For ilen = 1 To Nilens
-    pLage(Area, age, ilen) = Exp(-0.5 * ((l(ilen) - mu_tmp) / sd_tmp) ^ 2)
+    pLage(area, age, ilen) = Exp(-0.5 * ((l(ilen) - mu_tmp) / sd_tmp) ^ 2)
 Next
 
 ifrac = 1
-ilenlast = iLfull(Area)
+ilenlast = iLfull(area)
 
-While ifrac < Nfracs(Area, age) And ilen <= Nilens
+While ifrac < Nfracs(area, age) And ilen <= Nilens
     
     ilen = ilenlast
                
-     nextL = sd_tmp * Z(Area, age, ifrac + 1) + mu_tmp
+     nextL = sd_tmp * Z(area, age, ifrac + 1) + mu_tmp
      
      While l(ilen) <= nextL
-        pLage(Area, age, ilen) = pLage(Area, age, ilen) * frac(Area, age, ifrac)
+        pLage(area, age, ilen) = pLage(area, age, ilen) * frac(area, age, ifrac)
         ilen = ilen + 1
      Wend
      ilenlast = ilen
@@ -108,10 +108,10 @@ While ifrac < Nfracs(Area, age) And ilen <= Nilens
 Wend
 
 ' para ifrac = Nfracs(Area, age) - agregado con Ines
-If (Nfracs(Area, age) > 0) Then
+If (Nfracs(area, age) > 0) Then
    For ilen = ilenlast To Nilens
    
-     pLage(Area, age, ilen) = pLage(Area, age, ilen) * frac(Area, age, ifrac)
+     pLage(area, age, ilen) = pLage(area, age, ilen) * frac(area, age, ifrac)
 
    Next
 End If
@@ -119,11 +119,11 @@ End If
 
 intfact = 0
 For ilen = 1 To Nilens
-    intfact = intfact + pLage(Area, age, ilen)
+    intfact = intfact + pLage(area, age, ilen)
 Next ilen
 
 For ilen = 1 To Nilens
-    pLage(Area, age, ilen) = pLage(Area, age, ilen) / intfact
+    pLage(area, age, ilen) = pLage(area, age, ilen) / intfact
 Next ilen
 
 End Sub
@@ -372,20 +372,17 @@ Public Function rmultinom(N As Integer, size() As Double, prob() As Double) As V
     Dim randomvector As Double
     Dim multiLength As Integer
     multiLength = UBound(size) 'number of multinomial classes
-    Dim probAcum As Double
-    Dim liminter() As Double
+    Dim cumProb() As Double
     Dim vmultinom() As Double
-    ReDim liminter(1 To multiLength + 1)
+    ReDim cumProb(1 To multiLength + 1)
     ReDim vmultinom(1 To multiLength)
 
  
     ' Generate multinomial intervals
-    probAcum = 0
-    For j = 1 To i = multiLength
-        liminter(j) = probAcum
-        probAcum = probAcum + prob(j)
+    cumProb(1) = 0
+    For j = 2 To multiLength + 1
+        cumProb(j) = cumProb(j - 1) + prob(j - 1)
     Next j
-        liminter(multiLength + 1) = 1
         'Igual aquí habría que ponerle un comprobante para ver si probacum ==1
     
     'Check correspondence between random numbers and multinomial intervals
@@ -395,22 +392,18 @@ Public Function rmultinom(N As Integer, size() As Double, prob() As Double) As V
         randomvector = Rnd() 'Random numbers uniformly distributed from 0 to 1
         
         For j = 1 To multiLength
-            If liminter(j) <= randomvector And randomvector < liminter(j + 1) Then
+            If cumProb(j) <= randomvector And randomvector < cumProb(j + 1) Then
                 vmultinom(j) = vmultinom(j) + 1
                 Exit For 'Sale del loop una vez que encuentra que el valor esta dentro de uno de los intervalos
             End If
         Next j
       Next i
-      If N > 0 Then 'If N is greater than 0
+
       'Convert to proportions
       For j = 1 To multiLength
         vmultinom(j) = vmultinom(j) / N
       Next j
-      Else ' If it is 0
-        For j = 1 To multiLength
-          vmultinom(j) = 0
-        Next j
-      End If
+     
     
     'Return
      rmultinom = vmultinom ' Returns vmultinom

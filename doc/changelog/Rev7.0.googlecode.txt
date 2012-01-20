@@ -1,0 +1,27 @@
+=== Metapesca: Revisión 7.0 ===
+
+ **Objetivo General**
+
+Cambios generales, pero sobretodo en la GUI.
+
+==== CHANGES&COMMIT====
+
+svn add /doc/changelog/Rev7.0.googlecode.txt
+
+svn commit -m "REVISION:7.0. Cambios generales, pero sobretodo en la GUI. Ver log detallado en ~/doc/changelog/Rev7.0.googlecode.txt"
+
+====CHANGE-LOG====
+
+- Cambio de nombre: Flag_Rec_Fish pasa a ser flag_Partial_Rec
+- Incluir en el Input la variable de tamaño de muestra para calcular la estructura de talla de los muestreos y utilizarlo como parámetro de entrada en vez de pLotp: sample_Size_pL (si es cero no se hace la SampleSize.  pLopt desapare.
+- Eliminado SurveyAll(). No se utilizaba para nada. 
+- Cambios en DoSurvey() para que en el mismo calculo del pL se calculara el paso a tallas y biomasas. 
+- Cambiar en la DevelopmentGuide la definición de FracSel[Nareas, Nages] por: Selectividad a la edad. 
+- Incluido formato condicional en los Inputs (Ahora te resalta o oculta opciones cada vez que cambias ciertos valores de parametros indicándote las entradas que están "ACTIVAS".
+- Mete en el Input mensajes de incompatibilidad de parámetros (De Flags) y cambia los valores incompatibles cuando sea necesario.
+- Incluida hoja de calculo "Rotacion"  con los resting times y rotacion period para cada area a lo largo de la simulación en el caso de que la estrategia sea de rotacion.
+- Mirar si los formatos opcionales se reproducirían en las plantillas/Al importar INPUTs: No lo hacen
+
+====NOTAS====
+
+- Mirar si los formatos opcionales se reproducirían en las plantillas/Al importar INPUTs: No lo hacen
