@@ -1,0 +1,41 @@
+=== Metapesca: Revisión 8.0===
+
+ **Objetivo General**
+
+Revisión de los archivos de output. Ahora tiene la opción para guardar externamente los archivos de output, les asocia el nombre que nos interese, y guarda todo con distintos sufijos. Hubo problemas debido a los locales de Office (InsNay lo tiene en espanhol) al guardar los outputs. Se generó una variable en SYSTEM que indica la configuración regional (Si está en "Spanish" tiene en cuenta la configuración regional y separa los campos por ";"; sino, los separa por ","). A tener en cuenta a la hora de leer los outputs en R.
+
+
+==== TAREAS ====
+
+- En la development guide faltan: SBvirgin y VBvirgin, RunFlags.Output_csv
+- Comprobar porqué el output sizes solo tiene las probabilidades de tamaño para una única área...
+
+
+====ERRORES====
+
+
+==== CHANGES&COMMIT====
+
+svn add SimOut/outputAnalysisR/
+svn add SimOut/ <--Todos los outputs.
+
+svn rm SimOut/Output.csv
+svn add doc/changelog/Rev8.0.googlecode.txt
+
+svn commit -m "Revisión  y extensión de los archivos de output. Ver log detallado en ~/doc/changelog/Rev8.0.googlecode.txt"
+
+
+====CHANGE-LOG====
+
+- Modificar las opciones de output, para que te pueda escribir las salidas directamente en un archivo .csv (o lo que proceda) cuando quieras para evitar fallos de memoria cuando tienes muchas replicas:
+ - Anhadida opcion en el INPUT para  "Outputs to external .csv files (When Nreplicates are big)": RunFlags.Output_csv
+ - Grabar outputs con nombres correspondientes.
+- Quitada la columna de Adaptative de el Output de rotacion.
+- Ahora se escriben los outputs sin pasar por la hoja de calculo (para evitar problemas con archivos muy grandes) cuando RunFlags.Output_csv = TRUE.
+- En los outputs externos de las condiciones de equilibrio se añadieron a las biomasas el aporte de la primera edad (en los outputs del workbook no están porque se reutilizan como initial conditions, y el aporte de las larvas se le añade en el módulo Calc_Recruits).
+- En sizes, se escriben para todas las áreas en el output externo.
+- Se añaden outputs para el conjunto de todas las áreas (.totals) y outputs regionales (.region).
+
+
+====NOTAS====
+
